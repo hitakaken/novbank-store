@@ -38,30 +38,48 @@
         <sesame.version>2.7.14</sesame.version>
         <velocity.version>1.7</velocity.version>
         <velocity.tools.version>2.0</velocity.tools.version>
+        <!-- Spring Projects -->
         <spring.version>4.1.6.RELEASE</spring.version>
         <spring.batch.version>3.0.3.RELEASE</spring.batch.version>
+        <spring.boot.version>1.2.2.RELEASE</spring.boot.version>
         <spring.integration.version>4.1.2.RELEASE</spring.integration.version>
         <spring.data.version>1.9.2.RELEASE</spring.data.version>
-        <spring.data.jpa.version>1.7.2.RELEASE</spring.data.jpa.version>
-        <spring.data.mongodb.version>1.6.2.RELEASE</spring.data.mongodb.version>
-        <spring.data.redis.version>1.4.2.RELEASE</spring.data.redis.version>
-        <spring.data.hadoop.version>2.1.1.RELEASE</spring.data.hadoop.version>
-        <spring.data.neo4j.version>3.2.2.RELEASE</spring.data.neo4j.version>
-        <spring.data.solr.version>1.2.0.RELEASE</spring.data.solr.version>
-        <spring.data.elasticsearch.version>1.1.2.RELEASE</spring.data.elasticsearch.version>
-        <querydsl.version>3.6.2</querydsl.version>
+        <spring.data.hadoop.version>2.1.2.RELEASE</spring.data.hadoop.version>
+        <spring.data.jpa.version>1.8.0.RELEASE</spring.data.jpa.version>
+        <spring.data.mongodb.version>1.7.0.RELEASE</spring.data.mongodb.version>
+        <spring.data.neo4j.version>3.3.0.RELEASE</spring.data.neo4j.version>
+        <spring.data.redis.version>1.5.0.RELEASE</spring.data.redis.version>
+        <spring.data.solr.version>1.4.0.RELEASE</spring.data.solr.version>
+        <spring.data.elasticsearch.version>1.2.0.RELEASE</spring.data.elasticsearch.version>
+        <!-- Web Container -->
+        <tomcat.version>8.0.20</tomcat.version>
+        <!-- Database Tools -->
+        <querydsl.version>3.6.3</querydsl.version>
+        <jooq.version>3.5.1</jooq.version>
         <javax.validation.version>1.1.0.Final</javax.validation.version>
         <hibernate-validator.version>5.1.3.Final</hibernate-validator.version>
         <hibernate.version>4.3.8.Final</hibernate.version>
         <hibernate-jpa20.version>1.0.1.Final</hibernate-jpa20.version>
         <hibernate-jpa21.version>1.0.0.Final</hibernate-jpa21.version>
+        <HikariCP.version>2.3.5</HikariCP.version>
+        <!-- JDBC -->
         <derby.version>10.11.1.1</derby.version>
         <hsqldb.version>2.3.2</hsqldb.version>
         <h2.version>1.4.186</h2.version>
-        <HikariCP.version>2.3.5</HikariCP.version>
-        <spring.boot.version>1.2.2.RELEASE</spring.boot.version>
-        <tomcat.version>8.0.20</tomcat.version>
-        <jooq.version>3.5.1</jooq.version>
+        <mysql.java.version>5.1.35</mysql.java.version>
+        <mysql.mxj.version>5.0.12</mysql.mxj.version>
+        <!-- No SQL -->
+        <neo4j.version>2.2.0</neo4j.version>
+        <!-- Mongo -->
+        <mongo.java.version>3.0.0</mongo.java.version>
+        <gmongo.version>1.5</gmongo.version>
+        <flapdoodle.process.version>1.41.1</flapdoodle.process.version>
+        <flapdoodle.mongo.version>1.47.2</flapdoodle.mongo.version>
+        <flapdoodle.memcached.version>1.11.2</flapdoodle.memcached.version>
+        <flapdoodle.nodejs.version>1.28</flapdoodle.nodejs.version>
+        <flapdoodle.redis.version>1.11.2</flapdoodle.redis.version>
+        <jirutka.embedmongo>1.3.1</jirutka.embedmongo>
+        <!-- Apache Commons -->
         <commons-beanutils.version>1.9.2</commons-beanutils.version>
         <commons-codec.version>1.10</commons-codec.version>
         <commons-collections.version>3.2.1</commons-collections.version>
@@ -88,23 +106,23 @@
     </properties>
 
     <repositories>
+       <!-- <repository>
+            <id>central</id>
+            <name>Central</name>
+            <url>https://repo1.maven.org/maven2</url>
+        </repository>
         <repository>
             <id>spring-milestone</id>
             <name>Spring Milestone</name>
             <url>https://repo.spring.io/libs-milestone</url>
-        </repository>
+        </repository>-->
     </repositories>
 
     <dependencies>
         <!--  Spring Framework -->
         <dependency>
             <groupId>org.springframework</groupId>
-            <artifactId>spring-tx</artifactId>
-            <version>${spring.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context</artifactId>
+            <artifactId>spring-core</artifactId>
             <version>${spring.version}</version>
         </dependency>
         <dependency>
@@ -114,12 +132,27 @@
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
-            <artifactId>spring-core</artifactId>
+            <artifactId>spring-context</artifactId>
             <version>${spring.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-expression</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-tx</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-aspects</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-orm</artifactId>
             <version>${spring.version}</version>
         </dependency>
         <dependency>
@@ -150,6 +183,12 @@
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-tomcat</artifactId>
+            <version>${spring.boot.version}</version>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-velocity</artifactId>
             <version>${spring.boot.version}</version>
             <optional>true</optional>
@@ -171,6 +210,173 @@
             <groupId>org.springframework.batch</groupId>
             <artifactId>spring-batch-integration</artifactId>
             <version>${spring.batch.version}</version>
+        </dependency>
+
+        <!-- Spring Data -->
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-commons</artifactId>
+            <version>${spring.data.version}</version>
+        </dependency>
+
+        <!-- Spring Data Mongo -->
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-mongodb</artifactId>
+            <version>${spring.data.mongodb.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-mongodb-cross-store</artifactId>
+            <version>${spring.data.mongodb.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mongodb</groupId>
+            <artifactId>mongo-java-driver</artifactId>
+            <version>${mongo.java.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>de.flapdoodle.embed</groupId>
+            <artifactId>de.flapdoodle.embed.process</artifactId>
+            <version>${flapdoodle.process.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>de.flapdoodle.embed</groupId>
+            <artifactId>de.flapdoodle.embed.mongo</artifactId>
+            <version>${flapdoodle.mongo.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>cz.jirutka.spring</groupId>
+            <artifactId>embedmongo-spring</artifactId>
+            <version>${jirutka.embedmongo}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.gmongo</groupId>
+            <artifactId>gmongo</artifactId>
+            <version>${gmongo.version}</version>
+        </dependency>
+
+        <!-- Spring Data Neo4j -->
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-neo4j</artifactId>
+            <version>${spring.data.neo4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-neo4j-cross-store</artifactId>
+            <version>${spring.data.neo4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.neo4j</groupId>
+            <artifactId>neo4j-kernel</artifactId>
+            <version>${neo4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.neo4j</groupId>
+            <artifactId>neo4j-io</artifactId>
+            <version>${neo4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.neo4j</groupId>
+            <artifactId>neo4j-lucene-index</artifactId>
+            <version>${neo4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.neo4j</groupId>
+            <artifactId>neo4j-cypher</artifactId>
+            <version>${neo4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.neo4j</groupId>
+            <artifactId>neo4j-graphviz</artifactId>
+            <version>${neo4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.neo4j.app</groupId>
+            <artifactId>neo4j-server</artifactId>
+            <version>${neo4j.version}</version>
+        </dependency>
+
+        <!-- JPA -->
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-jpa</artifactId>
+            <version>${spring.data.jpa.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate.javax.persistence</groupId>
+            <artifactId>hibernate-jpa-2.0-api</artifactId>
+            <version>${hibernate-jpa20.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-entitymanager</artifactId>
+            <version>${hibernate.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- MySQL -->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>${mysql.java.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-mxj</artifactId>
+            <version>${mysql.mxj.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-mxj-db-files</artifactId>
+            <version>${mysql.mxj.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <!-- Embed Database -->
+        <dependency>
+            <groupId>org.apache.derby</groupId>
+            <artifactId>derby</artifactId>
+            <version>${derby.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.hsqldb</groupId>
+            <artifactId>hsqldb</artifactId>
+            <version>${hsqldb.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>${h2.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Validation -->
+        <dependency>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+            <version>${javax.validation.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-validator</artifactId>
+            <version>${hibernate-validator.version}</version>
+        </dependency>
+
+        <!-- Aspectj -->
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjrt</artifactId>
+            <version>${aspectj.version}</version>
+        </dependency>
+        <!-- Groovy -->
+        <dependency>
+            <groupId>org.codehaus.groovy</groupId>
+            <artifactId>groovy-all</artifactId>
+            <version>${groovy.version}</version>
         </dependency>
 
         <!-- test -->
