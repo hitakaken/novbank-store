@@ -19,10 +19,7 @@ import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfigurat
 import org.springframework.boot.autoconfigure.orm.jpa.JpaProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.orm.jpa.EntityScan;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.DependsOn;
-import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.*;
 import org.springframework.context.annotation.aspectj.EnableSpringConfigured;
 import org.springframework.data.neo4j.config.JtaTransactionManagerFactoryBean;
 import org.springframework.data.neo4j.core.GraphDatabase;
@@ -52,85 +49,9 @@ import java.util.Map;
 @Configuration
 @EnableSpringConfigured
 @AutoConfigureAfter({HibernateJpaAutoConfiguration.class})
-@EnableConfigurationProperties({JpaProperties.class,Neo4jProperties.class})
-public class CrossStoreConfiguration implements BeanFactoryAware {
-
-    private static final String JTA_PLATFORM = "hibernate.transaction.jta.platform";
-    private static final String[] NO_PACKAGES = new String[0];
-
-    private ConfigurableListableBeanFactory beanFactory;
-
-    //JPA
-    /*@Autowired
-    DataSource dataSource;
-
-    @Autowired
-    private JpaProperties jpaProperties;
-
-    @Autowired(required = false)
-    private PersistenceUnitManager persistenceUnitManager;
-
-    protected AbstractJpaVendorAdapter createJpaVendorAdapter() {
-        return new HibernateJpaVendorAdapter();
-    }
-
-    @Bean
-    @ConditionalOnMissingBean
-    public JpaVendorAdapter jpaVendorAdapter() {
-        AbstractJpaVendorAdapter adapter = createJpaVendorAdapter();
-        adapter.setShowSql(this.jpaProperties.isShowSql());
-        adapter.setDatabase(this.jpaProperties.getDatabase());
-        adapter.setDatabasePlatform(this.jpaProperties.getDatabasePlatform());
-        adapter.setGenerateDdl(this.jpaProperties.isGenerateDdl());
-        return adapter;
-    }
-
-    @Bean
-    @ConditionalOnMissingBean
-    public EntityManagerFactoryBuilder entityManagerFactoryBuilder(
-            JpaVendorAdapter jpaVendorAdapter) {
-        EntityManagerFactoryBuilder builder = new EntityManagerFactoryBuilder(
-                jpaVendorAdapter, this.jpaProperties, this.persistenceUnitManager);
-        //builder.setCallback(getVendorCallback());
-        return builder;
-    }
-
-    protected Map<String, Object> getVendorProperties() {
-        Map<String, Object> vendorProperties = new LinkedHashMap<String, Object>();
-        vendorProperties.putAll(this.jpaProperties.getHibernateProperties(this.dataSource));
-        return vendorProperties;
-    }
-
-    *//*protected void customizeVendorProperties(Map<String, Object> vendorProperties) {
-        //super.customizeVendorProperties(vendorProperties);
-        if (!vendorProperties.containsKey(JTA_PLATFORM)) {
-            configureJtaPlatform(vendorProperties);
-        }
-    }*//*
-
-    protected String[] getPackagesToScan() {
-        if (AutoConfigurationPackages.has(this.beanFactory)) {
-            List<String> basePackages = AutoConfigurationPackages.get(this.beanFactory);
-            return basePackages.toArray(new String[basePackages.size()]);
-        }
-        return NO_PACKAGES;
-    }
-
-    @Bean
-    @Primary
-    @ConditionalOnMissingBean
-    //@DependsOn({"mongoDocumentBacking","neo4jNodeBacking"})
-    public EntityManagerFactory entityManagerFactory(
-            EntityManagerFactoryBuilder factoryBuilder) {
-        Map<String, Object> vendorProperties = getVendorProperties();
-        //customizeVendorProperties(vendorProperties);
-        return factoryBuilder.dataSource(this.dataSource).packages(getPackagesToScan())
-                .properties(vendorProperties).build().getObject();
-    }*/
-
-
-
-
+@EnableConfigurationProperties(Neo4jProperties.class)
+@Import(CrossStoreNeo4jConfiguration.class)
+public class CrossStoreConfiguration {
     //Neo4j
     @Autowired
     private Neo4jProperties properties;
@@ -141,16 +62,5 @@ public class CrossStoreConfiguration implements BeanFactoryAware {
         return new GraphDatabaseFactory().newEmbeddedDatabase(properties.getStoreDirectory());
     }
 
-    @Bean
-    public CrossStoreNeo4jConfiguration crossStoreNeo4jConfiguration(EntityManagerFactory entityManagerFactory, GraphDatabaseService graphDatabaseService){
-        CrossStoreNeo4jConfiguration configuration = new CrossStoreNeo4jConfiguration();
-        configuration.setEntityManagerFactory(entityManagerFactory);
-        configuration.setGraphDatabaseService(graphDatabaseService);
-        return configuration;
-    }
 
-    @Override
-    public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
-        this.beanFactory = (ConfigurableListableBeanFactory) beanFactory;
-    }
 }

@@ -14,6 +14,7 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.web.SpringBootServletInitializer;
 import org.springframework.boot.orm.jpa.EntityScan;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 import javax.persistence.EntityManager;
 import java.io.IOException;
@@ -23,24 +24,14 @@ import java.io.IOException;
  */
 @SpringBootApplication
 @EntityScan(basePackages = "com.novbank.store.domain")
+@EnableJpaRepositories(basePackages = "com.novbank.store.repository")
 public class DataStoreApplication  extends SpringBootServletInitializer {
     public static Object[] sources = new Object[]{
             DataStoreApplication.class,
             DataSourceAutoConfiguration.class,
             CrossStoreConfiguration.class};
 
-    @Bean(destroyMethod="close")
-    public Mongo mongo() throws IOException {
 
-        return new EmbeddedMongoBuilder()
-                .version(Version.V3_0_2)
-                .bindIp("127.0.0.1")
-                .port(12345)
-                .build();
-    }
-
-    @Autowired
-    EntityManager em;
 
     public static void main(String... args) {
         SpringApplication.run(sources, args);
