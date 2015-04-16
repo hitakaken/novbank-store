@@ -3,9 +3,7 @@ package com.novbank.store.domain;
 import org.springframework.data.annotation.PersistenceConstructor;
 import org.springframework.data.neo4j.annotation.NodeEntity;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -14,7 +12,12 @@ import javax.validation.constraints.NotNull;
 @Entity
 //@Table( name="Account", uniqueConstraints= @UniqueConstraint(columnNames={"name"}))
 @NodeEntity(partial = true)
-public class Account extends Identifiable{
+public class Account{
+    @Id
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "id_gen")
+    @TableGenerator(name = "id_gen", table = "SEQUENCE", pkColumnName = "SEQ_NAME", valueColumnName = "SEQ_COUNT", pkColumnValue = "SEQ_GEN", allocationSize = 1)
+    private Long id;
+
     @NotNull
     private String name;
 
@@ -25,10 +28,12 @@ public class Account extends Identifiable{
 
     }
 
-    @PersistenceConstructor
-    public Account(String name, String password) {
-        this.name = name;
-        this.password = password;
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {

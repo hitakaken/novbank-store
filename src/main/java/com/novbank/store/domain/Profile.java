@@ -1,12 +1,12 @@
 package com.novbank.store.domain;
 
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
+//import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
  * Created by CaoKe on 2015/4/15.
  */
-@Document
+//@Document
 public class Profile {
     @Id
     private String id;

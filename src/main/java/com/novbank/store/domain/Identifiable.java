@@ -1,12 +1,11 @@
 package com.novbank.store.domain;
 
 import org.bson.types.ObjectId;
-import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.neo4j.annotation.GraphId;
 import org.springframework.data.neo4j.annotation.GraphProperty;
+import org.springframework.data.neo4j.annotation.Indexed;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.MappedSuperclass;
+import javax.persistence.*;
 import java.io.Serializable;
 
 /**
@@ -14,33 +13,34 @@ import java.io.Serializable;
  */
 @MappedSuperclass
 public abstract class Identifiable implements Serializable{
-
-    @javax.persistence.Id
-    @org.springframework.data.annotation.Id
     @GraphProperty
-    private String id;
+    @Indexed
+    @Id
+    private String guid;
 
     @GraphId
-    private Long graphId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    public void ensureId(){
-        if(id == null)
-            id = ObjectId.get().toString();
+    @PrePersist
+    public void ensureGUID(){
+        if(guid == null)
+            guid = ObjectId.get().toString();
     }
 
-    public String getId() {
+    public String getGuid() {
+        return guid;
+    }
+
+    public void setGuid(String guid) {
+        this.guid = guid;
+    }
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
-    }
-
-    public Long getGraphId() {
-        return graphId;
-    }
-
-    public void setGraphId(Long graphId) {
-        this.graphId = graphId;
     }
 }

@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:neo4j="http://www.springframework.org/schema/data/neo4j"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/data/neo4j http://www.springframework.org/schema/data/neo4j/spring-neo4j.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+	<context:spring-configured/>
+	<context:annotation-config/>
+    <neo4j:config graphDatabaseService="graphDatabaseService"  entityManagerFactory="entityManagerFactory" base-package="com.novbank.store.domain" />
+    <bean id = "graphDatabaseService" class="com.novbank.store.config.GraphDatabaseServiceFactoryBean">
+        <property name="url" value="${spring.data.neo4j.url}" />
+        <property name="username" value="${spring.data.neo4j.username}" />
+        <property name="password" value="${spring.data.neo4j.password}" />
+    </bean>
+    <!--
+
+    storeDirectory="D:/Workspace/data/neo4j/config-test"
+    <bean id = "graphDatabaseService" class="com.novbank.store.config.GraphDatabaseServiceFactoryBean">
+        <property name="url" value="${spring.data.neo4j.url}" />
+        <property name="username" value="${spring.data.neo4j.username}" />
+        <property name="password" value="${spring.data.neo4j.password}" />
+    </bean>-->
+
+   <!-- <bean id="graphDatabase" class="org.springframework.data.neo4j.support.DelegatingGraphDatabase">
+        <constructor-arg ref="graphDatabaseService"/>
+    </bean>
+
+    <bean id="neo4jNodeBacking" class="org.springframework.data.neo4j.aspects.support.node.Neo4jNodeBacking" factory-method="aspectOf">
+        <property name="template" ref="neo4jTemplate"/>
+        <property name="nodeEntityStateFactory" ref="nodeEntityStateFactory"/>
+    </bean>
+
+    <bean class="org.springframework.data.neo4j.aspects.support.relationship.Neo4jRelationshipBacking" factory-method="aspectOf">
+        <property name="template" ref="neo4jTemplate"/>
+        <property name="relationshipEntityStateFactory" ref="relationshipEntityStateFactory"/>
+    </bean>
+
+    <bean id="mappingInfrastructure" class="org.springframework.data.neo4j.support.MappingInfrastructureFactoryBean">
+        <property name="graphDatabaseService" ref="graphDatabaseService"/>
+        <property name="conversionService">
+            <bean class="org.springframework.data.neo4j.fieldaccess.Neo4jConversionServiceFactoryBean"/>
+        </property>
+        <property name="nodeTypeRepresentationStrategy" ref="nodeTypeRepresentationStrategy"/>
+        <property name="relationshipTypeRepresentationStrategy" ref="relationshipTypeRepresentationStrategy"/>
+        <property name="typeRepresentationStrategyFactory" ref="typeRepresentationStrategyFactory"/>
+        <property name="entityStateHandler" ref="entityStateHandler"/>
+        <property name="mappingContext" ref="mappingContext"/>
+        <property name="graphDatabase" ref="graphDatabase"/>
+        <property name="transactionManager" ref="transactionManager"/>
+    </bean>
+
+    <bean id="neo4jTemplate" class="org.springframework.data.neo4j.support.Neo4jTemplate">
+        <constructor-arg name="infrastructure" ref="mappingInfrastructure"/>
+    </bean>
+    <bean id="graphEntityInstantiator" class="org.springframework.data.neo4j.cross_store.support.node.CrossStoreNodeEntityInstantiator">
+        <constructor-arg ref="nodeEntityInstantiator"/>
+        <constructor-arg ref="entityManagerFactory"/>
+    </bean>
+    <bean id="entityStateHandler" class="org.springframework.data.neo4j.support.mapping.EntityStateHandler">
+        <constructor-arg ref="mappingContext"/>
+        <constructor-arg ref="graphDatabase"/>
+        <constructor-arg ref="conversionService"/>
+    </bean>
+    <bean id="conversionService" class="org.springframework.data.neo4j.fieldaccess.Neo4jConversionServiceFactoryBean"/>
+    <bean id="relationshipEntityInstantiator" class="org.springframework.data.neo4j.support.relationship.RelationshipEntityInstantiator">
+        <constructor-arg ref="entityStateHandler"/>
+    </bean>
+
+    <bean id="nodeEntityInstantiator" class="org.springframework.data.neo4j.support.node.NodeEntityInstantiator">
+        <constructor-arg ref="entityStateHandler"/>
+    </bean>
+
+    <bean id="typeRepresentationStrategyFactory" class="org.springframework.data.neo4j.support.typerepresentation.TypeRepresentationStrategyFactory">
+        <constructor-arg ref="graphDatabase"/>
+    </bean>
+
+    <bean id="nodeTypeRepresentationStrategy" factory-bean="typeRepresentationStrategyFactory" factory-method="getNodeTypeRepresentationStrategy" />
+    <bean id="relationshipTypeRepresentationStrategy" factory-bean="typeRepresentationStrategyFactory" factory-method="getRelationshipTypeRepresentationStrategy"/>
+
+    <bean id="nodeEntityStateFactory" class="org.springframework.data.neo4j.cross_store.support.node.CrossStoreNodeEntityStateFactory">
+        <constructor-arg ref="mappingContext"/>
+        <constructor-arg>
+            <bean class="org.springframework.data.neo4j.fieldaccess.NodeDelegatingFieldAccessorFactory$Factory"/>
+        </constructor-arg>
+        <constructor-arg>
+            <bean class="org.springframework.data.neo4j.cross_store.support.node.CrossStoreNodeDelegatingFieldAccessorFactory$Factory"/>
+        </constructor-arg>
+        <constructor-arg name="entityManagerFactory" ref="entityManagerFactory"/>
+    </bean>
+
+    <bean id="mappingContext" class="org.springframework.data.neo4j.support.mapping.Neo4jMappingContext">
+        <property name="initialEntitySet">
+            <set>
+                <value>com.novbank.store.domain.Account</value>
+                <value>com.novbank.store.domain.Project</value>
+                <value>com.novbank.store.domain.Resource</value>
+            </set>
+        </property>
+    </bean>
+
+
+    <bean id="relationshipEntityStateFactory" class="org.springframework.data.neo4j.support.relationship.RelationshipEntityStateFactory">
+        <constructor-arg ref="mappingContext"/>
+        <constructor-arg>
+            <bean class="org.springframework.data.neo4j.fieldaccess.RelationshipDelegatingFieldAccessorFactory$Factory"/>
+        </constructor-arg>
+    </bean>
+
+
+    <bean id="transactionManager" class="org.springframework.data.transaction.ChainedTransactionManager" >
+        <constructor-arg>
+            <list>
+                <bean class="org.springframework.orm.jpa.JpaTransactionManager" id="jpaTransactionManager">
+                    <property name="entityManagerFactory" ref="entityManagerFactory"/>
+                </bean>
+                <bean class="org.springframework.data.neo4j.config.JtaTransactionManagerFactoryBean">
+                    <constructor-arg ref="graphDatabaseService"/>
+                </bean>
+            </list>
+        </constructor-arg>
+    </bean>-->
+
+
+
+    <!--<bean class="org.springframework.jdbc.datasource.DriverManagerDataSource" id="dataSource">
+        <property name="driverClassName" value="${spring.datasource.driver-class-name}"/>
+        <property name="url" value="${spring.datasource.url}" />
+        <property name="username" value="${spring.datasource.username}" />
+        <property name="password" value="${spring.datasource.password}" />
+    </bean>-->
+
+    <!--<tx:annotation-driven mode="aspectj" transaction-manager="transactionManager"/>-->
+
+    <!--<bean class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean" id="entityManagerFactory">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="packagesToScan">
+            <list>
+                <value>com.novbank.store.domain</value>
+            </list>
+        </property>
+        <property name="jpaVendorAdapter">
+            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"/>
+        </property>
+        <property name="jpaProperties">
+            <props>
+                <prop key="hibernate.hbm2ddl.auto">${spring.jpa.hibernate.ddl-auto}</prop>
+            </props>
+        </property>
+    </bean>-->
+
+    <!--<bean id="entityManager" class="org.springframework.orm.jpa.SharedEntityManagerCreator" factory-method="createSharedEntityManager">
+        <constructor-arg ref="entityManagerFactory"/>
+    </bean>-->
+</beans>
