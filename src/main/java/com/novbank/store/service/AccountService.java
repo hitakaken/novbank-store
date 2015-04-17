@@ -7,4 +7,6 @@ import com.novbank.store.domain.graph.Account;
  */
 public interface AccountService {
     Account save(Account account);
+
+    Account findByProfileId(String profileId);
 }

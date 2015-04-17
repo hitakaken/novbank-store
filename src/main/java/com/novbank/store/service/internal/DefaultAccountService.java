@@ -18,4 +18,9 @@ public class DefaultAccountService implements AccountService {
     public Account save(Account account) {
         return accounts.save(account);
     }
+
+    @Override
+    public Account findByProfileId(String profileId) {
+        return accounts.findOneBy_ProfileId(profileId);
+    }
 }

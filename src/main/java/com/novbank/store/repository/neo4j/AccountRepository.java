@@ -7,6 +7,6 @@ import org.springframework.data.neo4j.repository.GraphRepository;
 /**
  * Created by HP on 2015/4/15.
  */
-public interface AccountRepository extends GraphRepository<Account>,CypherDslRepository<Account> {
+public interface AccountRepository extends GraphRepository<Account>,CypherDslRepository<Account>,ProfiledRepository<Account>{
 
 }

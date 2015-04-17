@@ -11,6 +11,7 @@ import java.lang.annotation.*;
 @Target(ElementType.TYPE)
 @Inherited
 @Persistent
+@Documented
 public @interface Profiled {
 
 }

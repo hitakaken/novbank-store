@@ -27,6 +27,8 @@ public class CrossStoreTests {
     @Autowired
     AccountService accounts;
 
+
+
     @Test
     public void testEntityManager(){
         for(EntityType type: em.getMetamodel().getEntities()){
@@ -36,9 +38,13 @@ public class CrossStoreTests {
         account.setName("kcao");
         account.setPassword("kcao");
         Profile profile = ((ProfileBacked)account).profile();
-        System.out.println(profile.isAsNode());
+        String profileId = profile.getId();
+        account.getProfile().put("QQ", "xxxxxxx");
         account = accounts.save(account);
-        System.out.println(account.getClass());
+        System.out.println(account.getId());
+        System.out.println(profileId);
+        account = accounts.findByProfileId(profileId);
+        System.out.println(account.getId());
     }
 
 }

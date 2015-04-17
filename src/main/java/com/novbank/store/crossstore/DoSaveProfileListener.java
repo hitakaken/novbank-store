@@ -19,10 +19,8 @@ public class DoSaveProfileListener implements ApplicationListener<AfterSaveEvent
     @Override
     public void onApplicationEvent(AfterSaveEvent event) {
         Object entity = event.getEntity();
-        if(!(entity instanceof ProfileBacked))
-        if(((ProfileBacked)entity)._profile() == null)
-        if(((ProfileBacked) entity).profile().getGraphId() ==null)
-            ((ProfileBacked) entity).profile().setGraphId((entity instanceof NodeBacked)?((NodeBacked) entity).getNodeId():((RelationshipBacked) entity).getRelationshipId());
-        profiles.save(((ProfileBacked) entity).profile());
+        if((entity instanceof ProfileBacked) && ((ProfileBacked) entity).profileOrigin() !=null){
+            profiles.save(((ProfileBacked) entity).profile());
+        }
     }
 }
