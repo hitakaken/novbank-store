@@ -1,20 +1,17 @@
 package com.novbank.store;
 
-import com.novbank.store.domain.Account;
-import com.novbank.store.repository.AccountRepository;
-import org.hibernate.jpa.HibernateEntityManager;
-import org.hibernate.jpa.HibernateEntityManagerFactory;
+import com.novbank.store.crossstore.ProfileBacked;
+import com.novbank.store.domain.document.Profile;
+import com.novbank.store.domain.graph.Account;
+import com.novbank.store.service.AccountService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.boot.test.WebIntegrationTest;
-import org.springframework.data.neo4j.aspects.support.node.Neo4jNodeBacking;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import javax.persistence.metamodel.EntityType;
 
 /**
@@ -28,13 +25,7 @@ public class CrossStoreTests {
     EntityManager em;
 
     @Autowired
-    AccountRepository accounts;
-
-    @Autowired(required = false)
-    private EntityManagerFactory entityManagerFactory;
-
-    @Autowired(required = false)
-    private HibernateEntityManagerFactory hibernateEntityManagerFactory;
+    AccountService accounts;
 
     @Test
     public void testEntityManager(){
@@ -44,6 +35,8 @@ public class CrossStoreTests {
         Account account = new Account();
         account.setName("kcao");
         account.setPassword("kcao");
+        Profile profile = ((ProfileBacked)account).profile();
+        System.out.println(profile.isAsNode());
         account = accounts.save(account);
         System.out.println(account.getClass());
     }

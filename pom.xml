@@ -63,6 +63,7 @@
         <hibernate-jpa20.version>1.0.1.Final</hibernate-jpa20.version>
         <hibernate-jpa21.version>1.0.0.Final</hibernate-jpa21.version>
         <HikariCP.version>2.3.5</HikariCP.version>
+        <querydsl.version>3.6.3</querydsl.version>
         <!-- JDBC -->
         <derby.version>10.11.1.1</derby.version>
         <hsqldb.version>2.3.2</hsqldb.version>
@@ -225,14 +226,9 @@
         </dependency>
 
         <!-- Spring Data Mongo -->
-        <!--<dependency>
-            <groupId>org.springframework.data</groupId>
-            <artifactId>spring-data-mongodb</artifactId>
-            <version>${spring.data.mongodb.version}</version>
-        </dependency>
         <dependency>
             <groupId>org.springframework.data</groupId>
-            <artifactId>spring-data-mongodb-cross-store</artifactId>
+            <artifactId>spring-data-mongodb</artifactId>
             <version>${spring.data.mongodb.version}</version>
         </dependency>
         <dependency>
@@ -241,29 +237,14 @@
             <version>${mongo.java.version}</version>
         </dependency>
         <dependency>
-            <groupId>de.flapdoodle.embed</groupId>
-            <artifactId>de.flapdoodle.embed.process</artifactId>
-            <version>${flapdoodle.process.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>de.flapdoodle.embed</groupId>
-            <artifactId>de.flapdoodle.embed.mongo</artifactId>
-            <version>${flapdoodle.mongo.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>cz.jirutka.spring</groupId>
-            <artifactId>embedmongo-spring</artifactId>
-            <version>${jirutka.embedmongo}</version>
+            <groupId>org.mongodb</groupId>
+            <artifactId>bson</artifactId>
+            <version>${mongo.java.version}</version>
         </dependency>
         <dependency>
             <groupId>com.gmongo</groupId>
             <artifactId>gmongo</artifactId>
             <version>${gmongo.version}</version>
-        </dependency>-->
-        <dependency>
-            <groupId>org.mongodb</groupId>
-            <artifactId>bson</artifactId>
-            <version>${mongo.java.version}</version>
         </dependency>
 
         <!-- Spring Data Neo4j -->
@@ -274,7 +255,14 @@
         </dependency>
         <dependency>
             <groupId>org.springframework.data</groupId>
-            <artifactId>spring-data-neo4j-cross-store</artifactId>
+            <artifactId>spring-data-neo4j</artifactId>
+            <version>${spring.data.neo4j.version}</version>
+            <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-neo4j-aspects</artifactId>
             <version>${spring.data.neo4j.version}</version>
         </dependency>
         <dependency>
@@ -292,12 +280,6 @@
             <artifactId>neo4j-kernel</artifactId>
             <version>${neo4j.version}</version>
         </dependency>
-        <!-- After 2.2.0 -->
-        <!--<dependency>
-            <groupId>org.neo4j</groupId>
-            <artifactId>neo4j-io</artifactId>
-            <version>${neo4j.version}</version>
-        </dependency>-->
         <dependency>
             <groupId>org.neo4j</groupId>
             <artifactId>neo4j-lucene-index</artifactId>
@@ -308,21 +290,22 @@
             <artifactId>neo4j-cypher</artifactId>
             <version>${neo4j.version}</version>
         </dependency>
-        <!--<dependency>
-            <groupId>org.neo4j</groupId>
-            <artifactId>neo4j-cypher-dsl</artifactId>
-            <version>${neo4j.cypher-dsl.version}</version>
-        </dependency>-->
         <dependency>
             <groupId>org.neo4j</groupId>
             <artifactId>neo4j-graphviz</artifactId>
             <version>${neo4j.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.neo4j.app</groupId>
-            <artifactId>neo4j-server</artifactId>
+        <!--<dependency>
+            <groupId>org.neo4j</groupId>
+            <artifactId>neo4j-cypher-dsl</artifactId>
+            <version>${neo4j.cypher-dsl.version}</version>
+        </dependency>-->
+        <!-- After 2.2.0 -->
+        <!--<dependency>
+            <groupId>org.neo4j</groupId>
+            <artifactId>neo4j-io</artifactId>
             <version>${neo4j.version}</version>
-        </dependency>
+        </dependency>-->
 
         <!-- Redis -->
         <dependency>
@@ -334,11 +317,6 @@
             <groupId>redis.clients</groupId>
             <artifactId>jedis</artifactId>
             <version>${jedis.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>de.flapdoodle.embed</groupId>
-            <artifactId>de.flapdoodle.embed.redis</artifactId>
-            <version>${flapdoodle.redis.version}</version>
         </dependency>
 
         <!-- JPA -->
@@ -368,18 +346,6 @@
             <artifactId>mysql-connector-java</artifactId>
             <version>${mysql.java.version}</version>
         </dependency>
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-mxj</artifactId>
-            <version>${mysql.mxj.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-mxj-db-files</artifactId>
-            <version>${mysql.mxj.version}</version>
-            <scope>provided</scope>
-        </dependency>
         <!-- Embed Database -->
         <dependency>
             <groupId>org.apache.derby</groupId>
@@ -398,6 +364,34 @@
             <artifactId>h2</artifactId>
             <version>${h2.version}</version>
             <scope>provided</scope>
+        </dependency>
+
+        <!-- QueryDSL -->
+        <dependency>
+            <groupId>com.mysema.querydsl</groupId>
+            <artifactId>querydsl-core</artifactId>
+            <version>${querydsl.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.mysema.querydsl</groupId>
+            <artifactId>querydsl-lucene3</artifactId>
+            <version>${querydsl.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.lucene</groupId>
+                    <artifactId>lucene-core</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.mysema.querydsl</groupId>
+            <artifactId>querydsl-mongodb</artifactId>
+            <version>${querydsl.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.mysema.querydsl</groupId>
+            <artifactId>querydsl-apt</artifactId>
+            <version>${querydsl.version}</version>
         </dependency>
 
         <!-- Rest -->
@@ -538,10 +532,6 @@
                             <groupId>org.springframework.data</groupId>
                             <artifactId>spring-data-neo4j-aspects</artifactId>
                         </aspectLibrary>
-                       <!-- <aspectLibrary>
-                            <groupId>org.springframework.data</groupId>
-                            <artifactId>spring-data-mongodb-cross-store</artifactId>
-                        </aspectLibrary>-->
                     </aspectLibraries>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
