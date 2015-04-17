@@ -1,6 +1,6 @@
 package com.novbank.store.domain;
 
-import org.springframework.data.annotation.PersistenceConstructor;
+import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.neo4j.annotation.NodeEntity;
 
 import javax.persistence.*;
@@ -12,7 +12,8 @@ import javax.validation.constraints.NotNull;
 @Entity
 //@Table( name="Account", uniqueConstraints= @UniqueConstraint(columnNames={"name"}))
 @NodeEntity(partial = true)
-public class Account{
+@Document
+public class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "id_gen")
     @TableGenerator(name = "id_gen", table = "SEQUENCE", pkColumnName = "SEQ_NAME", valueColumnName = "SEQ_COUNT", pkColumnValue = "SEQ_GEN", allocationSize = 1)

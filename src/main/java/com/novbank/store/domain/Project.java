@@ -1,6 +1,6 @@
 package com.novbank.store.domain;
 
-import org.springframework.data.neo4j.annotation.NodeEntity;
+//import org.springframework.data.neo4j.annotation.NodeEntity;
 
 import javax.persistence.*;
 
@@ -8,8 +8,8 @@ import javax.persistence.*;
  * Created by HP on 2015/4/14.
  */
 @Entity
-@NodeEntity(partial = true)
-public class Project {
+//@NodeEntity(partial = true)
+public class Project{
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "id_gen")
     @TableGenerator(name = "id_gen", table = "SEQUENCE", pkColumnName = "SEQ_NAME", valueColumnName = "SEQ_COUNT", pkColumnValue = "SEQ_GEN", allocationSize = 1)

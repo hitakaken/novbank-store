@@ -1,25 +1,27 @@
 package com.novbank.store.domain;
 
+/*
 import org.bson.types.ObjectId;
-import org.springframework.data.neo4j.annotation.GraphId;
 import org.springframework.data.neo4j.annotation.GraphProperty;
 import org.springframework.data.neo4j.annotation.Indexed;
 
 import javax.persistence.*;
+*/
 import java.io.Serializable;
 
 /**
  * Created by HP on 2015/4/15.
  */
-@MappedSuperclass
+//@MappedSuperclass
 public abstract class Identifiable implements Serializable{
-    @GraphProperty
+   /* @GraphProperty
     @Indexed
-    @Id
+    @Column(name="guid",unique = true)
     private String guid;
 
-    @GraphId
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "id_gen")
+    @TableGenerator(name = "id_gen", table = "SEQUENCE", pkColumnName = "SEQ_NAME", valueColumnName = "SEQ_COUNT", pkColumnValue = "SEQ_GEN", allocationSize = 1)
     private Long id;
 
     @PrePersist
@@ -42,5 +44,6 @@ public abstract class Identifiable implements Serializable{
 
     public void setId(Long id) {
         this.id = id;
-    }
+    }*/
+
 }

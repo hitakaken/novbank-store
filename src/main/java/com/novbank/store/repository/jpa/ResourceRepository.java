@@ -1,4 +1,4 @@
-package com.novbank.store.repository;
+package com.novbank.store.repository.jpa;
 
 import com.novbank.store.domain.Resource;
 import org.springframework.data.repository.PagingAndSortingRepository;

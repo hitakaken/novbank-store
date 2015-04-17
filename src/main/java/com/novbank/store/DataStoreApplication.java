@@ -7,6 +7,7 @@ import org.springframework.boot.context.web.SpringBootServletInitializer;
 import org.springframework.boot.orm.jpa.EntityScan;
 import org.springframework.context.annotation.ImportResource;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 
@@ -19,10 +20,11 @@ public class DataStoreApplication  extends SpringBootServletInitializer {
             //CrossStoreConfiguration.class,
             DataStoreApplication.class};
 
-    @EnableJpaRepositories(basePackages = "com.novbank.store.repository")
+    @EnableJpaRepositories(basePackages = "com.novbank.store.repository.jpa")
+    @EnableMongoRepositories(basePackages = "com.novbank.store.repository.mongo")
     @EntityScan(basePackages = "com.novbank.store.domain")
     @EnableTransactionManagement
-    @ImportResource("classpath:spring/neo4j.xml")
+    @ImportResource("classpath:spring/cross-store.xml")
     public static class CrossStoreConfiguration{
 
     }

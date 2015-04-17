@@ -9,8 +9,8 @@ import org.springframework.data.neo4j.rest.SpringCypherRestGraphDatabase;
  * Created by HP on 2015/4/16.
  */
 public class GraphDatabaseServiceFactoryBean implements FactoryBean<GraphDatabaseService> {
-    private String url;
     private String username;
+    private String url;
     private String password;
 
     public String getUrl() {
