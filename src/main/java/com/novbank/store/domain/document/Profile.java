@@ -1,6 +1,6 @@
 package com.novbank.store.domain.document;
 
-import com.google.common.collect.Table;
+import com.novbank.store.domain.AbstractProfiled;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -12,7 +12,7 @@ import java.util.Set;
  * Created by CaoKe on 2015/4/18.
  */
 @Document
-public class Profile implements Profiled{
+public class Profile extends AbstractProfiled {
     @Id
     private String id;
 
@@ -31,6 +31,16 @@ public class Profile implements Profiled{
         this.id = id;
     }
 
+    public Map<String, Set<Map<String, Object>>> getFields() {
+        return fields;
+    }
 
+    public void setFields(Map<String, Set<Map<String, Object>>> fields) {
+        this.fields = fields;
+    }
 
+    @Override
+    public Set<String> fieldNames() {
+        return fields.keySet();
+    }
 }
