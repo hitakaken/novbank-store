@@ -100,7 +100,7 @@
         <commons-pool2.version>2.3</commons-pool2.version>
         <commons-lang3.version>3.3.2</commons-lang3.version>
         <commons-lang.version>2.6</commons-lang.version>
-        <commons-math3.version>3.4.1</commons-math3.version>
+        <commons-math3.version>3.3</commons-math3.version>
         <commons-net.version>3.3</commons-net.version>
         <commons-vfs2.version>2.0</commons-vfs2.version>
         <mahout.version>0.10.0</mahout.version>
