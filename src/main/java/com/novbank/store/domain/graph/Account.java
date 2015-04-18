@@ -1,21 +1,25 @@
 package com.novbank.store.domain.graph;
 
-import com.novbank.store.crossstore.Profiled;
+import com.novbank.store.crossstore.ProfiledNode;
+import org.springframework.data.neo4j.annotation.Fetch;
+import org.springframework.data.neo4j.annotation.GraphProperty;
+import org.springframework.data.neo4j.annotation.Indexed;
 import org.springframework.data.neo4j.annotation.NodeEntity;
 
-import javax.validation.constraints.NotNull;
 
 /**
  * Created by HP on 2015/4/15.
  */
 @NodeEntity
-@Profiled
+@ProfiledNode
 public class Account extends Identifiable{
-
-    @NotNull
+    @Indexed(unique = true)
+    @GraphProperty
+    @Fetch
     private String name;
 
-    @NotNull
+    @GraphProperty
+    @Fetch
     private String password;
 
     public Account() {

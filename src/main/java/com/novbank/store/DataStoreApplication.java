@@ -1,7 +1,7 @@
 package com.novbank.store;
 
-import com.novbank.store.crossstore.ProfileBacking;
-import com.novbank.store.repository.mongo.ProfileRepository;
+import com.novbank.store.crossstore.CrossStoreEventListeners;
+import com.novbank.store.crossstore.ProfiledNodeBacking;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.factory.GraphDatabaseFactory;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
@@ -17,6 +17,7 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 import org.springframework.data.neo4j.aspects.config.Neo4jAspectConfiguration;
 import org.springframework.data.neo4j.config.EnableNeo4jRepositories;
 import org.springframework.data.neo4j.rest.SpringCypherRestGraphDatabase;
+import org.springframework.data.neo4j.support.Neo4jTemplate;
 
 
 /**
@@ -41,7 +42,7 @@ public class DataStoreApplication  extends SpringBootServletInitializer {
     @Bean
     public GraphDatabaseService graphDatabaseService() throws Exception {
         if(url.startsWith("local:")){
-            return new GraphDatabaseFactory().newEmbeddedDatabase(url.substring(6));
+            return new GraphDatabaseFactory().newEmbeddedDatabaseBuilder(url.substring(6)).newGraphDatabase();
         } else if(url.startsWith("remote:")){
             url =url.substring(7);
             if(username!=null && password!=null){
@@ -61,12 +62,17 @@ public class DataStoreApplication  extends SpringBootServletInitializer {
     }
 
     @Bean
-    public ProfileBacking profileBacking(MongoTemplate mongoTemplate,ProfileRepository profiles) throws Exception {
-        ProfileBacking aspect = ProfileBacking.aspectOf();
+    public ProfiledNodeBacking nodeProfiledBacking(MongoTemplate mongoTemplate) throws Exception {
+        ProfiledNodeBacking aspect = ProfiledNodeBacking.aspectOf();
         aspect.setMongoTemplate(mongoTemplate);
-        aspect.setProfileRepository(profiles);
         return aspect;
     }
+
+    @Bean
+    public CrossStoreEventListeners.AfterSaveEventListener afterSaveEventListener(Neo4jTemplate neo4jTemplate, MongoTemplate mongoTemplate){
+        return new CrossStoreEventListeners.AfterSaveEventListener(neo4jTemplate,mongoTemplate);
+    }
+
 
     public static void main(String... args) {
         SpringApplication.run(sources, args);
