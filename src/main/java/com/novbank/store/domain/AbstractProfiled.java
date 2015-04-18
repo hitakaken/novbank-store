@@ -225,7 +225,9 @@ public abstract class AbstractProfiled implements Profiled {
 
     @Override
     public Object getFieldValueStrictly(String fieldName, final String k1, final Object v1) {
-        return getFieldValueStrictly(fieldName, new HashMap<String, Object>() {{put(k1, v1);}});
+        return getFieldValueStrictly(fieldName, new HashMap<String, Object>() {{
+            put(k1, v1);
+        }});
     }
 
     @Override
@@ -236,5 +238,25 @@ public abstract class AbstractProfiled implements Profiled {
     @Override
     public Object getFieldValueStrictly(String fieldName, final String k1, final Object v1, final String k2, final Object v2, final String k3, final Object v3) {
         return getFieldValueStrictly(fieldName, new HashMap<String, Object>() {{put(k1, v1);put(k2, v2);put(k3, v3);}});
+    }
+
+    /*@Override
+    public void setFieldsValues(Profiled other, Map<String, Object> options, boolean overwrite) {
+
+    }*/
+
+    @Override
+    public void setFieldsValues(Profiled other, Map<String, Object> options) {
+        setFieldsValues(other,options,false);
+    }
+
+    @Override
+    public void setFieldsValues(Profiled other, boolean overwrite) {
+        setFieldsValues(other,null,overwrite);
+    }
+
+    @Override
+    public void setFieldsValues(Profiled other) {
+        setFieldsValues(other,false);
     }
 }

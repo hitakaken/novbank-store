@@ -39,6 +39,10 @@ public class Profile extends AbstractProfiled {
         this.fields = fields;
     }
 
+    /** Implements Profiled **/
+    public final static String VALUE_FIELD="_value";
+    //public final static String OPTIONS_FIELD="_options";
+
     @Override
     public Set<String> fieldNames() {
         return fields.keySet();
