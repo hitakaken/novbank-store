@@ -5,6 +5,7 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.novbank.store.crossstore.CrossStoreConstants;
 import com.novbank.store.domain.graph.Account;
+import com.novbank.store.domain.graph.Resource;
 import com.novbank.store.service.AccountService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,6 +18,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.persistence.EntityManager;
 import javax.persistence.metamodel.EntityType;
+import java.util.Date;
 
 /**
  * Created by HP on 2015/4/15.
@@ -54,7 +56,12 @@ public class CrossStoreTests {
         //BasicDBObject profile = mongoTemplate.findById(  newAccount1.asProfiled().profileId(),BasicDBObject.class,CrossStoreConstants.PROFILE_COLLECTION_NAME);
         DBCollection collection =  mongoTemplate.getDb().getCollection(CrossStoreConstants.PROFILE_COLLECTION_NAME);
         DBCursor cursorDoc = collection.find();
-        
+
+        Resource patent = new Resource();
+        Resource company = new Resource();
+        patent.asNode().relateTo(company.asNode(),"assignee");
+        patent.asProfiled().setFieldValue("application data",new Date());
+
         while (cursorDoc.hasNext()) {
             System.out.println(cursorDoc.next());
         }

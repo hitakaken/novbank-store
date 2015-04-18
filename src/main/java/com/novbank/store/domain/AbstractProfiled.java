@@ -39,9 +39,8 @@ public abstract class AbstractProfiled implements Profiled {
     public void setFieldsValues(Map<String, Object> values, Map<String, Object> options, boolean overwrite) {
         if(values == null || values.isEmpty()) return;
         for(String fieldName : values.keySet()){
-            if(!overwrite && containsFieldOptions(fieldName,options))
-                continue;
-            setFieldValue(fieldName,options);
+            if(overwrite || !containsFieldOptions(fieldName,options))
+                setFieldValue(fieldName,options);
         }
     }
 
@@ -240,10 +239,20 @@ public abstract class AbstractProfiled implements Profiled {
         return getFieldValueStrictly(fieldName, new HashMap<String, Object>() {{put(k1, v1);put(k2, v2);put(k3, v3);}});
     }
 
-    /*@Override
+    @Override
     public void setFieldsValues(Profiled other, Map<String, Object> options, boolean overwrite) {
-
-    }*/
+        if(other == null || other.fieldNames() ==null || other.fieldNames().isEmpty())
+            return;
+        for(String fieldName : other.fieldNames()){
+            for(Map.Entry<Map<String,Object>,Object> entry:other.getFieldValuesWithOptions(fieldName).entrySet()){
+                Map<String,Object> key = entry.getKey();
+                Object value = entry.getValue();
+                if(options!=null) key.putAll(options);
+                if(overwrite || !containsFieldOptions(fieldName,options))
+                    setFieldValue(fieldName,options);
+            }
+        }
+    }
 
     @Override
     public void setFieldsValues(Profiled other, Map<String, Object> options) {

@@ -100,8 +100,10 @@
         <commons-pool2.version>2.3</commons-pool2.version>
         <commons-lang3.version>3.3.2</commons-lang3.version>
         <commons-lang.version>2.6</commons-lang.version>
+        <commons-math3.version>3.4.1</commons-math3.version>
         <commons-net.version>3.3</commons-net.version>
         <commons-vfs2.version>2.0</commons-vfs2.version>
+        <mahout.version>0.10.0</mahout.version>
         <joda.version>2.7</joda.version>
         <jackson.version>2.5.1</jackson.version>
         <shiro.version>1.2.3</shiro.version>
@@ -424,6 +426,18 @@
             <groupId>org.codehaus.groovy</groupId>
             <artifactId>groovy-all</artifactId>
             <version>${groovy.version}</version>
+        </dependency>
+
+        <!-- Apache -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-math3</artifactId>
+            <version>${commons-math3.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.mahout</groupId>
+            <artifactId>mahout-math</artifactId>
+            <version>${mahout.version}</version>
         </dependency>
 
         <!-- test -->
