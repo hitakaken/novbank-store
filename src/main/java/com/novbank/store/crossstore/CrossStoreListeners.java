@@ -9,20 +9,22 @@ import org.springframework.stereotype.Component;
  * Created by CaoKe on 2015/4/17.
  */
 @Component
-public class CrossStoreEventListeners {
+public class CrossStoreListeners {
 
     @Component
-    public class AfterSaveEventListener implements ApplicationListener<AfterSaveEvent>{
-
+    public class AfterNeo4jSaveEventListener implements ApplicationListener<AfterSaveEvent>{
         @Autowired
-        public AfterSaveEventListener() {     }
+        public AfterNeo4jSaveEventListener() {     }
 
         @Override
         public void onApplicationEvent(AfterSaveEvent event) {
             System.out.println("Call me!");
-            if((event.getEntity() instanceof ProfiledBacked) && ((ProfiledBacked) event.getEntity()).profileChanged()){
+            if((event.getEntity() instanceof ProfiledBacked)
+                    && ((ProfiledBacked) event.getEntity()).profileChanged()){
                 ((ProfiledBacked) event.getEntity()).persistProfile();
             }
         }
     }
+
+
 }

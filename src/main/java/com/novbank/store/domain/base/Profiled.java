@@ -20,12 +20,12 @@ public interface Profiled {
      * @param fieldName
      * @return
      */
-    Set fieldValues(String fieldName);
-    Set fieldValues(String fieldName,Map<String,Object> options);
-    Set fieldValuesStrictly(String fieldName,Map<String,Object> options);
-    Map<String,Set> fieldsValues(Iterable<String> fieldNames);
-    Map<String,Set> fieldsValues(Iterable<String> fieldNames,Map<String,Object> options);
-    Map<String,Set> fieldsValuesStrictly(Iterable<String> fieldNames,Map<String,Object> options);
+    Set values(String fieldName);
+    Set values(String fieldName, Map<String, Object> options);
+    Set valuesStrictly(String fieldName,Map<String,Object> options);
+    Map<String,Set> values(Iterable<String> fieldNames);
+    Map<String,Set> values(Iterable<String> fieldNames,Map<String,Object> options);
+    Map<String,Set> valuesStrictly(Iterable<String> fieldNames,Map<String,Object> options);
 
     /**
      * 获取所有字段值（带条件）
@@ -33,12 +33,12 @@ public interface Profiled {
      * @param fieldName
      * @return
      */
-    Map<Map<String,Object>,Object> fieldValuesWithOptions(String fieldName);
-    Map<Map<String,Object>,Object> fieldValuesWithOptions(String fieldName,Map<String,Object> options);
-    Map<Map<String,Object>,Object> fieldValuesWithOptionsStrictly(String fieldName,Map<String,Object> options);
-    Map<String,Map<Map<String,Object>,Object>> fieldsValuesWithOptions(Iterable<String> fieldNames);
-    Map<String,Map<Map<String,Object>,Object>> fieldsValuesWithOptions(Iterable<String> fieldNames,Map<String,Object> options);
-    Map<String,Map<Map<String,Object>,Object>> fieldsValuesWithOptionsStrictly(Iterable<String> fieldNames,Map<String,Object> options);
+    Map<Map<String,Object>,Object> valuesWithOptions(String fieldName);
+    Map<Map<String,Object>,Object> valuesWithOptions(String fieldName,Map<String,Object> options);
+    Map<Map<String,Object>,Object> valuesWithOptionsStrictly(String fieldName,Map<String,Object> options);
+    Map<String,Map<Map<String,Object>,Object>> valuesWithOptions(Iterable<String> fieldNames);
+    Map<String,Map<Map<String,Object>,Object>> valuesWithOptions(Iterable<String> fieldNames,Map<String,Object> options);
+    Map<String,Map<Map<String,Object>,Object>> valuesWithOptionsStrictly(Iterable<String> fieldNames,Map<String,Object> options);
 
     /**
      * 获取默认字段值
@@ -46,7 +46,7 @@ public interface Profiled {
      * @param fieldName 字段名
      * @return
      */
-    Object fieldValue(String fieldName);
+    Object value(String fieldName);
 
     /**
      * 获取最接近条件的字段值
@@ -55,70 +55,70 @@ public interface Profiled {
      * @param options 条件
      * @return
      */
-    Object fieldValue(String fieldName, Map<String,Object> options);
-    Object fieldValueStrictly(String fieldName, Map<String,Object> options);
-    //Object fieldValue(String fieldName, Map<String,Object> options, boolean strict);
+    Object value(String fieldName, Map<String,Object> options);
+    Object valueStrictly(String fieldName, Map<String,Object> options);
+    //Object value(String fieldName, Map<String,Object> options, boolean strict);
 
     //直接条件查询接口
-    Object fieldValue(String fieldName, String k1, Object v1);
-    Object fieldValue(String fieldName, String k1, Object v1, String k2, Object v2);
-    Object fieldValue(String fieldName, String k1, Object v1, String k2, Object v2, String k3, Object v3);
-    Object fieldValueStrictly(String fieldName, String k1, Object v1);
-    Object fieldValueStrictly(String fieldName, String k1, Object v1, String k2, Object v2);
-    Object fieldValueStrictly(String fieldName, String k1, Object v1, String k2, Object v2, String k3, Object v3);
+    Object value(String fieldName, String k1, Object v1);
+    Object value(String fieldName, String k1, Object v1, String k2, Object v2);
+    Object value(String fieldName, String k1, Object v1, String k2, Object v2, String k3, Object v3);
+    Object valueStrictly(String fieldName, String k1, Object v1);
+    Object valueStrictly(String fieldName, String k1, Object v1, String k2, Object v2);
+    Object valueStrictly(String fieldName, String k1, Object v1, String k2, Object v2, String k3, Object v3);
 
     /**
      * 设置字段值（无额外属性）
      *
      * @param fieldName
-     * @param fieldValue
+     * @param value
      */
-    void setFieldValue(String fieldName, Object fieldValue);
+    void putValue(String fieldName, Object value);
 
     /**
      * 设置字段值（额外属性）
      *
      * @param fieldName
-     * @param fieldValue
+     * @param value
      * @param options
      */
-    void setFieldValue(String fieldName, Object fieldValue, Map<String,Object> options);
-    void setFieldValue(String fieldName, Object fieldValue, Map<String,Object> options, boolean overwrite);
+    void putValue(String fieldName, Object value, Map<String,Object> options);
+    void putValue(String fieldName, Object value, Map<String,Object> options, boolean overwrite);
 
-    void setFieldValue(String fieldName, Object fieldValue, String k1, Object v1);
-    void setFieldValue(String fieldName, Object fieldValue, String k1, Object v1, String k2, Object v2);
-    void setFieldValue(String fieldName, Object fieldValue, String k1, Object v1, String k2, Object v2, String k3, Object v3);
+    void putValue(String fieldName, Object value, String k1, Object v1);
+    void putValue(String fieldName, Object value, String k1, Object v1, String k2, Object v2);
+    void putValue(String fieldName, Object value, String k1, Object v1, String k2, Object v2, String k3, Object v3);
 
     /**
      * 设置多个字段（无额外属性）
      *
      * @param values
      */
-    void setFieldsValues(Map<String,Object> values);
-    void setFieldsValues(Map<String,Object> values,boolean overwrite);
+    void putValues(Map<String,Object> values);
+    void putValues(Map<String,Object> values,boolean overwrite);
 
     /**
      * 设置多个字段值（额外属性）
      * @param values
      * @param options
      */
-    void setFieldsValues(Map<String,Object> values, Map<String,Object> options);
-    void setFieldsValues(Map<String,Object> values, Map<String,Object> options, boolean overwrite);
+    void putValues(Map<String,Object> values, Map<String,Object> options);
+    void putValues(Map<String,Object> values, Map<String,Object> options, boolean overwrite);
 
-    void setFieldsValues(Map<String,Object> values, String k1, Object v1);
-    void setFieldsValues(Map<String,Object> values, String k1, Object v1, String k2, Object v2);
-    void setFieldsValues(Map<String,Object> values, String k1, Object v1, String k2, Object v2, String k3, Object v3);
-    void setFieldsValues(Map<String,Object> values, String k1, Object v1, boolean overwrite);
-    void setFieldsValues(Map<String,Object> values, String k1, Object v1, String k2, Object v2, boolean overwrite);
-    void setFieldsValues(Map<String,Object> values, String k1, Object v1, String k2, Object v2, String k3, Object v3, boolean overwrite);
+    void putValues(Map<String,Object> values, String k1, Object v1);
+    void putValues(Map<String,Object> values, String k1, Object v1, String k2, Object v2);
+    void putValues(Map<String,Object> values, String k1, Object v1, String k2, Object v2, String k3, Object v3);
+    void putValues(Map<String,Object> values, String k1, Object v1, boolean overwrite);
+    void putValues(Map<String,Object> values, String k1, Object v1, String k2, Object v2, boolean overwrite);
+    void putValues(Map<String,Object> values, String k1, Object v1, String k2, Object v2, String k3, Object v3, boolean overwrite);
 
     /**
      * 从另一对象复制
      *
      * @param other
      */
-    void setFieldsValues(Profiled other);
-    void setFieldsValues(Profiled other, Map<String,Object> options);
-    void setFieldsValues(Profiled other, boolean overwrite);
-    void setFieldsValues(Profiled other, Map<String,Object> options, boolean overwrite);
+    void putValues(Profiled other);
+    void putValues(Profiled other, Map<String,Object> options);
+    void putValues(Profiled other, boolean overwrite);
+    void putValues(Profiled other, Map<String,Object> options, boolean overwrite);
 }

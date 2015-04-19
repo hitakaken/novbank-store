@@ -5,14 +5,13 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.novbank.store.domain.base.AbstractProfiled;
 import com.novbank.store.util.CollectionUtils;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.util.Assert;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by CaoKe on 2015/4/18.
@@ -22,7 +21,21 @@ public class Profile extends AbstractProfiled {
     @Id
     private String id;
 
+    /**
+     *  实现 Profiled 的 Java 数据结构
+     */
     private Map<String,Set<Map<String,Object>>> fields;
+
+    private Long graphId;
+
+    private String graphEntityType;
+
+    private Set<String> labels;
+
+    @CreatedDate
+    private Date createTime;
+
+    private Date lastModified;
 
     public Profile(String id) {
         this.id = id;
@@ -48,7 +61,6 @@ public class Profile extends AbstractProfiled {
     /** Implements Profiled **/
     public final static String VALUE_FIELD="_value";
     protected final static Set<String> IGNORE_FIELDS= Sets.newHashSet(VALUE_FIELD);
-
     //public final static String OPTIONS_FIELD="_options";
 
     @Override
@@ -56,10 +68,11 @@ public class Profile extends AbstractProfiled {
         return fields.keySet();
     }
 
+    @Transient
     protected transient boolean changed = false;
 
     @Override
-    public void setFieldValue(String fieldName, Object fieldValue, Map<String, Object> options, boolean overwrite) {
+    public void putValue(String fieldName, Object fieldValue, Map<String, Object> options, boolean overwrite) {
         Assert.notNull(fieldName);
         if(!fields.containsKey(fieldName))
             fields.put(fieldName,new HashSet<Map<String, Object>>());
@@ -81,8 +94,10 @@ public class Profile extends AbstractProfiled {
                 break;
             }
         }
-        if(!replaced)
+        if(!replaced) {
             fields.get(fieldName).add(Maps.newHashMap(options));
+            changed = true;
+        }
     }
 
     public boolean isChanged() {
@@ -94,7 +109,7 @@ public class Profile extends AbstractProfiled {
     }
 
     @Override
-    public Map<Map<String, Object>, Object> fieldValuesWithOptions(String fieldName, Map<String, Object> options, boolean strictly) {
+    public Map<Map<String, Object>, Object> valuesWithOptions(String fieldName, Map<String, Object> options, boolean strictly) {
         Assert.notNull(fieldName);
         if(options == null)   options = new HashMap<>();
         Map<Map<String, Object>, Object> results = Maps.newHashMap();
@@ -113,7 +128,7 @@ public class Profile extends AbstractProfiled {
     public final static boolean USE_LATEST = true;
 
     @Override
-    public Object fieldValue(String fieldName, Map<String, Object> options, boolean strict) {
+    public Object value(String fieldName, Map<String, Object> options, boolean strict) {
         Assert.notNull(fieldName);
         if(options == null)   options = new HashMap<>();
         if(!fields.containsKey(fieldName))   return null;

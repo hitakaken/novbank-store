@@ -1,57 +1,56 @@
 package com.novbank.store;
 
-import com.novbank.store.crossstore.CrossStoreEventListeners;
+import com.mongodb.Mongo;
+import com.mongodb.MongoClientOptions;
+import com.novbank.store.helper.DataSourceHelper;
 import org.neo4j.graphdb.GraphDatabaseService;
-import org.neo4j.graphdb.factory.GraphDatabaseFactory;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.mongo.MongoProperties;
 import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.context.web.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
-import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 import org.springframework.data.neo4j.aspects.config.Neo4jAspectConfiguration;
 import org.springframework.data.neo4j.config.EnableNeo4jRepositories;
-import org.springframework.data.neo4j.rest.SpringCypherRestGraphDatabase;
-import org.springframework.data.neo4j.support.Neo4jTemplate;
 
 
 /**
  * Created by HP on 2015/4/14.
  */
 @SpringBootApplication
+@EnableAutoConfiguration
 @EnableBatchProcessing
 @EnableAspectJAutoProxy
 @EnableMongoRepositories(basePackages = "com.novbank.store.repository.mongo")
+@EnableConfigurationProperties(DataSourceHelper.Neo4jProperties.class)
 public class DataStoreApplication  extends SpringBootServletInitializer {
     public static Object[] sources = new Object[]{
             DataStoreApplication.class};
 
-    @Value("${spring.data.neo4j.url}")
-    private String url;
-
-    @Value("${spring.data.neo4j.username}")
-    private String username;
-
-    @Value("${spring.data.neo4j.password}")
-    private String password;
+    @Autowired
+    private DataSourceHelper.Neo4jProperties neo4jProperties;
 
     @Bean
     public GraphDatabaseService graphDatabaseService() throws Exception {
-        if(url.startsWith("local:")){
-            return new GraphDatabaseFactory().newEmbeddedDatabaseBuilder(url.substring(6)).newGraphDatabase();
-        } else if(url.startsWith("remote:")){
-            url =url.substring(7);
-            if(username!=null && password!=null){
-                return new SpringCypherRestGraphDatabase(url,username,password);
-            }else
-                return new SpringCypherRestGraphDatabase(url);
-        }
-        return null;
+        return DataSourceHelper.graphDatabaseService(neo4jProperties);
+    }
+
+    @Autowired
+    private MongoProperties mongoProperties;
+
+    @Autowired(required = false)
+    private MongoClientOptions mongoOptions;
+
+    @Bean
+    public Mongo mongo(){
+        return DataSourceHelper.mongo3(mongoProperties,mongoOptions);
     }
 
     @Configuration

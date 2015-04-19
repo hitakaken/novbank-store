@@ -15,207 +15,207 @@ public abstract class AbstractDelegateProfiled implements Profiled{
     }
 
     @Override
-    public Set fieldValues(String fieldName) {
-        return delegate().fieldValues(fieldName);
+    public Set values(String fieldName) {
+        return delegate().values(fieldName);
     }
 
     @Override
-    public Set fieldValues(String fieldName, Map<String, Object> options) {
-        return delegate().fieldValues(fieldName, options);
+    public Set values(String fieldName, Map<String, Object> options) {
+        return delegate().values(fieldName, options);
     }
 
     @Override
-    public Set fieldValuesStrictly(String fieldName, Map<String, Object> options) {
-        return delegate().fieldValuesStrictly(fieldName, options);
+    public Set valuesStrictly(String fieldName, Map<String, Object> options) {
+        return delegate().valuesStrictly(fieldName, options);
     }
 
     @Override
-    public Map<String, Set> fieldsValues(Iterable<String> fieldNames) {
-        return delegate().fieldsValues(fieldNames);
+    public Map<String, Set> values(Iterable<String> fieldNames) {
+        return delegate().values(fieldNames);
     }
 
     @Override
-    public Map<String, Set> fieldsValues(Iterable<String> fieldNames, Map<String, Object> options) {
-        return delegate().fieldsValues(fieldNames, options);
+    public Map<String, Set> values(Iterable<String> fieldNames, Map<String, Object> options) {
+        return delegate().values(fieldNames, options);
     }
 
     @Override
-    public Map<String, Set> fieldsValuesStrictly(Iterable<String> fieldNames, Map<String, Object> options) {
-        return delegate().fieldsValuesStrictly(fieldNames, options);
+    public Map<String, Set> valuesStrictly(Iterable<String> fieldNames, Map<String, Object> options) {
+        return delegate().valuesStrictly(fieldNames, options);
     }
 
     @Override
-    public Map<Map<String, Object>, Object> fieldValuesWithOptions(String fieldName) {
-        return delegate().fieldValuesWithOptions(fieldName);
+    public Map<Map<String, Object>, Object> valuesWithOptions(String fieldName) {
+        return delegate().valuesWithOptions(fieldName);
     }
 
     @Override
-    public Map<Map<String, Object>, Object> fieldValuesWithOptions(String fieldName, Map<String, Object> options) {
-        return delegate().fieldValuesWithOptions(fieldName, options);
+    public Map<Map<String, Object>, Object> valuesWithOptions(String fieldName, Map<String, Object> options) {
+        return delegate().valuesWithOptions(fieldName, options);
     }
 
     @Override
-    public Map<Map<String, Object>, Object> fieldValuesWithOptionsStrictly(String fieldName, Map<String, Object> options) {
-        return delegate().fieldValuesWithOptionsStrictly(fieldName, options);
+    public Map<Map<String, Object>, Object> valuesWithOptionsStrictly(String fieldName, Map<String, Object> options) {
+        return delegate().valuesWithOptionsStrictly(fieldName, options);
     }
 
     @Override
-    public Map<String, Map<Map<String, Object>, Object>> fieldsValuesWithOptions(Iterable<String> fieldNames) {
-        return delegate().fieldsValuesWithOptions(fieldNames);
+    public Map<String, Map<Map<String, Object>, Object>> valuesWithOptions(Iterable<String> fieldNames) {
+        return delegate().valuesWithOptions(fieldNames);
     }
 
     @Override
-    public Map<String, Map<Map<String, Object>, Object>> fieldsValuesWithOptions(Iterable<String> fieldNames, Map<String, Object> options) {
-        return delegate().fieldsValuesWithOptions(fieldNames, options);
+    public Map<String, Map<Map<String, Object>, Object>> valuesWithOptions(Iterable<String> fieldNames, Map<String, Object> options) {
+        return delegate().valuesWithOptions(fieldNames, options);
     }
 
     @Override
-    public Map<String, Map<Map<String, Object>, Object>> fieldsValuesWithOptionsStrictly(Iterable<String> fieldNames, Map<String, Object> options) {
-        return delegate().fieldsValuesWithOptionsStrictly(fieldNames,options) ;
+    public Map<String, Map<Map<String, Object>, Object>> valuesWithOptionsStrictly(Iterable<String> fieldNames, Map<String, Object> options) {
+        return delegate().valuesWithOptionsStrictly(fieldNames, options) ;
     }
 
     @Override
-    public Object fieldValue(String fieldName) {
-        return delegate().fieldValue(fieldName);
+    public Object value(String fieldName) {
+        return delegate().value(fieldName);
     }
 
     @Override
-    public Object fieldValue(String fieldName, Map<String, Object> options) {
-        return delegate().fieldValue(fieldName,options);
+    public Object value(String fieldName, Map<String, Object> options) {
+        return delegate().value(fieldName, options);
     }
 
     @Override
-    public Object fieldValueStrictly(String fieldName, Map<String, Object> options) {
-        return delegate().fieldValueStrictly(fieldName,options);
+    public Object valueStrictly(String fieldName, Map<String, Object> options) {
+        return delegate().valueStrictly(fieldName, options);
     }
 
     @Override
-    public Object fieldValue(String fieldName, String k1, Object v1) {
-        return delegate().fieldValue(fieldName,k1,v1);
+    public Object value(String fieldName, String k1, Object v1) {
+        return delegate().value(fieldName, k1, v1);
     }
 
     @Override
-    public Object fieldValue(String fieldName, String k1, Object v1, String k2, Object v2) {
-        return delegate().fieldValue(fieldName,k1,v1,k2,v2);
+    public Object value(String fieldName, String k1, Object v1, String k2, Object v2) {
+        return delegate().value(fieldName, k1, v1, k2, v2);
     }
 
     @Override
-    public Object fieldValue(String fieldName, String k1, Object v1, String k2, Object v2, String k3, Object v3) {
-        return delegate().fieldValue(fieldName,k1,v1,k2,v2,k3,v3);
+    public Object value(String fieldName, String k1, Object v1, String k2, Object v2, String k3, Object v3) {
+        return delegate().value(fieldName, k1, v1, k2, v2, k3, v3);
     }
 
     @Override
-    public Object fieldValueStrictly(String fieldName, String k1, Object v1) {
-        return delegate().fieldValueStrictly(fieldName,k1,v1);
+    public Object valueStrictly(String fieldName, String k1, Object v1) {
+        return delegate().valueStrictly(fieldName, k1, v1);
     }
 
     @Override
-    public Object fieldValueStrictly(String fieldName, String k1, Object v1, String k2, Object v2) {
-        return delegate().fieldValueStrictly(fieldName,k1,v1,k2,v2);
+    public Object valueStrictly(String fieldName, String k1, Object v1, String k2, Object v2) {
+        return delegate().valueStrictly(fieldName, k1, v1, k2, v2);
     }
 
     @Override
-    public Object fieldValueStrictly(String fieldName, String k1, Object v1, String k2, Object v2, String k3, Object v3) {
-        return delegate().fieldValueStrictly(fieldName,k1,v1,k2,v2,k3,v3);
+    public Object valueStrictly(String fieldName, String k1, Object v1, String k2, Object v2, String k3, Object v3) {
+        return delegate().valueStrictly(fieldName, k1, v1, k2, v2, k3, v3);
     }
 
     @Override
-    public void setFieldValue(String fieldName, Object fieldValue) {
-        delegate().setFieldValue(fieldName,fieldValue);
+    public void putValue(String fieldName, Object value) {
+        delegate().putValue(fieldName, value);
     }
 
     @Override
-    public void setFieldValue(String fieldName, Object fieldValue, Map<String, Object> options) {
-        delegate().setFieldValue(fieldName,fieldValue,options);
+    public void putValue(String fieldName, Object value, Map<String, Object> options) {
+        delegate().putValue(fieldName, value, options);
     }
 
     @Override
-    public void setFieldValue(String fieldName, Object fieldValue, Map<String, Object> options, boolean overwrite) {
-        delegate().setFieldValue(fieldName,fieldValue,options,overwrite);
+    public void putValue(String fieldName, Object value, Map<String, Object> options, boolean overwrite) {
+        delegate().putValue(fieldName, value, options, overwrite);
     }
 
     @Override
-    public void setFieldValue(String fieldName, Object fieldValue, String k1, Object v1) {
-        delegate().setFieldValue(fieldName,fieldValue,k1,v1);
+    public void putValue(String fieldName, Object value, String k1, Object v1) {
+        delegate().putValue(fieldName, value, k1, v1);
     }
 
     @Override
-    public void setFieldValue(String fieldName, Object fieldValue, String k1, Object v1, String k2, Object v2) {
-        delegate().setFieldValue(fieldName,fieldValue,k1,v1,k2,v2);
+    public void putValue(String fieldName, Object value, String k1, Object v1, String k2, Object v2) {
+        delegate().putValue(fieldName, value, k1, v1, k2, v2);
     }
 
     @Override
-    public void setFieldValue(String fieldName, Object fieldValue, String k1, Object v1, String k2, Object v2, String k3, Object v3) {
-        delegate().setFieldValue(fieldName,fieldValue,k1,v1,k2,v2,k3,v3);
+    public void putValue(String fieldName, Object value, String k1, Object v1, String k2, Object v2, String k3, Object v3) {
+        delegate().putValue(fieldName, value, k1, v1, k2, v2, k3, v3);
     }
 
     @Override
-    public void setFieldsValues(Map<String, Object> values) {
-        delegate().setFieldsValues(values);
+    public void putValues(Map<String, Object> values) {
+        delegate().putValues(values);
     }
 
     @Override
-    public void setFieldsValues(Map<String, Object> values, boolean overwrite) {
-        delegate().setFieldsValues(values,overwrite);
+    public void putValues(Map<String, Object> values, boolean overwrite) {
+        delegate().putValues(values, overwrite);
     }
 
     @Override
-    public void setFieldsValues(Map<String, Object> values, Map<String, Object> options) {
-        delegate().setFieldsValues(values,options);
+    public void putValues(Map<String, Object> values, Map<String, Object> options) {
+        delegate().putValues(values, options);
     }
 
     @Override
-    public void setFieldsValues(Map<String, Object> values, Map<String, Object> options, boolean overwrite) {
-        delegate().setFieldsValues(values,options,overwrite);
+    public void putValues(Map<String, Object> values, Map<String, Object> options, boolean overwrite) {
+        delegate().putValues(values, options, overwrite);
     }
 
     @Override
-    public void setFieldsValues(Map<String, Object> values, String k1, Object v1) {
-        delegate().setFieldsValues(values,k1,v1);
+    public void putValues(Map<String, Object> values, String k1, Object v1) {
+        delegate().putValues(values, k1, v1);
     }
 
     @Override
-    public void setFieldsValues(Map<String, Object> values, String k1, Object v1, String k2, Object v2) {
-        delegate().setFieldsValues(values,k1,v1,k2,v2);
+    public void putValues(Map<String, Object> values, String k1, Object v1, String k2, Object v2) {
+        delegate().putValues(values, k1, v1, k2, v2);
     }
 
     @Override
-    public void setFieldsValues(Map<String, Object> values, String k1, Object v1, String k2, Object v2, String k3, Object v3) {
-        delegate().setFieldsValues(values, k1, v1, k2, v2, k3, v3);
+    public void putValues(Map<String, Object> values, String k1, Object v1, String k2, Object v2, String k3, Object v3) {
+        delegate().putValues(values, k1, v1, k2, v2, k3, v3);
     }
 
     @Override
-    public void setFieldsValues(Map<String, Object> values, String k1, Object v1, boolean overwrite) {
-        delegate().setFieldsValues(values,k1,v1,overwrite);
+    public void putValues(Map<String, Object> values, String k1, Object v1, boolean overwrite) {
+        delegate().putValues(values, k1, v1, overwrite);
     }
 
     @Override
-    public void setFieldsValues(Map<String, Object> values, String k1, Object v1, String k2, Object v2, boolean overwrite) {
-        delegate().setFieldsValues(values,k1,v1,k2,v2,overwrite);
+    public void putValues(Map<String, Object> values, String k1, Object v1, String k2, Object v2, boolean overwrite) {
+        delegate().putValues(values, k1, v1, k2, v2, overwrite);
     }
 
     @Override
-    public void setFieldsValues(Map<String, Object> values, String k1, Object v1, String k2, Object v2, String k3, Object v3, boolean overwrite) {
-        delegate().setFieldsValues(values,k1,v1,k2,v2,k3,v3,overwrite);
+    public void putValues(Map<String, Object> values, String k1, Object v1, String k2, Object v2, String k3, Object v3, boolean overwrite) {
+        delegate().putValues(values, k1, v1, k2, v2, k3, v3, overwrite);
     }
 
     @Override
-    public void setFieldsValues(Profiled other) {
-        delegate().setFieldsValues(other);
+    public void putValues(Profiled other) {
+        delegate().putValues(other);
     }
 
     @Override
-    public void setFieldsValues(Profiled other, Map<String, Object> options) {
-        delegate().setFieldsValues(other,options);
+    public void putValues(Profiled other, Map<String, Object> options) {
+        delegate().putValues(other, options);
     }
 
     @Override
-    public void setFieldsValues(Profiled other, boolean overwrite) {
-        delegate().setFieldsValues(other,overwrite);
+    public void putValues(Profiled other, boolean overwrite) {
+        delegate().putValues(other, overwrite);
     }
 
     @Override
-    public void setFieldsValues(Profiled other, Map<String, Object> options, boolean overwrite) {
-        delegate().setFieldsValues(other,options,overwrite);
+    public void putValues(Profiled other, Map<String, Object> options, boolean overwrite) {
+        delegate().putValues(other, options, overwrite);
     }
 }

@@ -37,11 +37,12 @@ public class CrossStoreTests {
         Account account = new Account();
         account.setName(ObjectId.get().toString());
         account.setPassword("kcao");
-        account.asProfiled().setFieldValue("QQ", "xxxxxxx");
+        account.asProfiled().putValue("QQ", "xxxxxxx");
         System.out.println(account.asNode().getNodeId());
         String profileId = account.asProfiled().profileId();
         System.out.println(profileId);
         account = accounts.save(account);
+        System.out.println(account.asProfiled().value("QQ"));
         //Account newAccount = accounts.findByName("kcao");
 
         Account newAccount1 = template.findByIndexedValue(Account.class, "name", "kcao").singleOrNull();

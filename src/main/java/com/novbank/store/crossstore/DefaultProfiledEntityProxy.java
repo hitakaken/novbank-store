@@ -3,6 +3,7 @@ package com.novbank.store.crossstore;
 import com.novbank.store.domain.base.AbstractDelegateProfiled;
 import com.novbank.store.domain.base.Profiled;
 import com.novbank.store.domain.document.Profile;
+import com.novbank.store.repository.mongo.ProfileRepository;
 import org.bson.types.ObjectId;
 import org.neo4j.graphdb.PropertyContainer;
 import org.springframework.data.annotation.Transient;
@@ -14,12 +15,6 @@ import org.springframework.data.neo4j.support.Neo4jTemplate;
  * Created by CaoKe on 2015/4/19.
  */
 public class DefaultProfiledEntityProxy extends AbstractDelegateProfiled implements ProfiledBacked {
-    /*public final static String PROFILE_ID_FIELD = "_profile_id";
-    public final static String PROFILE_ID_INDEX = "_profile_id_index";
-    public final static String PROFILE_COLLECTION_NAME = "profile";
-    public final static String ID_FIELD = "_id";
-    public final static String TYPE_FIELD = "_type";*/
-
     @Transient
     private transient Neo4jTemplate neo4jOps;
     @Transient
@@ -66,12 +61,12 @@ public class DefaultProfiledEntityProxy extends AbstractDelegateProfiled impleme
 
     @Override
     public boolean profileChanged() {
-        return profile !=null && profile.isChanged();
+        return profileLoaded() && profile.isChanged();
     }
 
     @Override
     public void initializeProfile() {
-        if(profileChanged() && (source instanceof GraphBacked) && ((GraphBacked) source).hasPersistentState()){
+        if(!profileInitialized() && profileLoaded() && (source instanceof GraphBacked) && ((GraphBacked) source).hasPersistentState()){
             PropertyContainer pc = (PropertyContainer) ((GraphBacked) source).getPersistentState();
             pc.setProperty(PROFILE_ID_FIELD, profile.getId());
         }
@@ -92,13 +87,14 @@ public class DefaultProfiledEntityProxy extends AbstractDelegateProfiled impleme
     }
 
     public void loadProfile(){
-        if(profileInitialized() && !profileLoaded()){
+        if(profileInitialized() && profile==null){
             profile = mongoOps.findById(sourceProfileId(),Profile.class);
         }
-        if(profile == null)   createProfile();
+        if(profile == null)  createProfile();
     }
 
     public void createProfile(){
+        if(profile !=null) return;
         profile = new Profile(ObjectId.get().toString());
         profile.setChanged(true);
         initializeProfile();
@@ -106,7 +102,7 @@ public class DefaultProfiledEntityProxy extends AbstractDelegateProfiled impleme
 
     public void persistProfile(){
         if(profileChanged())  {
-            mongoOps.save(profile());
+            mongoOps.save(profile);
             profile.setChanged(false);
         }
         if(profileInitialized()) return;
