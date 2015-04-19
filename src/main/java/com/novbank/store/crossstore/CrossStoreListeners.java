@@ -1,6 +1,7 @@
 package com.novbank.store.crossstore;
 
 import com.mongodb.DBObject;
+import com.novbank.store.domain.base.profile.ProfileBacked;
 import com.novbank.store.domain.document.Profile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
@@ -22,9 +23,9 @@ public class CrossStoreListeners {
         @Override
         public void onApplicationEvent(AfterSaveEvent event) {
             System.out.println("Call me!");
-            if((event.getEntity() instanceof ProfiledBacked)
-                    && ((ProfiledBacked) event.getEntity()).profileChanged()){
-                ((ProfiledBacked) event.getEntity()).persistProfile();
+            if((event.getEntity() instanceof ProfileBacked)
+                    && ((ProfileBacked) event.getEntity()).profileChanged()){
+                ((ProfileBacked) event.getEntity()).persistProfile();
             }
         }
     }

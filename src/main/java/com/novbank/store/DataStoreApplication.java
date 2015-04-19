@@ -54,7 +54,7 @@ public class DataStoreApplication  extends SpringBootServletInitializer {
     @EnableTransactionManagement
     public static class Neo4jStoreConfiguration extends Neo4jAspectConfiguration{
         public Neo4jStoreConfiguration() {
-            setBasePackage("com.novbank.store.domain.graph");
+            setBasePackage("com.novbank.store.domain");
         }
 
         /* TODO Why not work?

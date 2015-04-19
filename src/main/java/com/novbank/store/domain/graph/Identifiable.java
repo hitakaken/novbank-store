@@ -1,6 +1,6 @@
 package com.novbank.store.domain.graph;
 
-import com.novbank.store.crossstore.ProfiledBacked;
+import com.novbank.store.domain.base.profile.ProfileBacked;
 import org.joda.time.DateTime;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
@@ -85,12 +85,12 @@ public abstract class Identifiable implements Serializable{
     }
 
     public boolean hasProfile(){
-        return (this instanceof ProfiledBacked);
+        return (this instanceof ProfileBacked);
     }
 
-    public ProfiledBacked asProfiled(){
+    public ProfileBacked asProfiled(){
         if(hasProfile())
-            return (ProfiledBacked) this;
+            return (ProfileBacked) this;
         return null;
     }
 

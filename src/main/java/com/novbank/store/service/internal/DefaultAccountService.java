@@ -1,6 +1,6 @@
 package com.novbank.store.service.internal;
 
-import com.novbank.store.crossstore.ProfiledBacked;
+import com.novbank.store.domain.base.profile.ProfileBacked;
 import com.novbank.store.domain.graph.Account;
 import com.novbank.store.repository.neo4j.AccountRepository;
 import com.novbank.store.service.AccountService;
@@ -29,6 +29,6 @@ public class DefaultAccountService implements AccountService {
 
     @Override
     public Account findByProfileId(String profileId) {
-        return accounts.findByPropertyValue(ProfiledBacked.PROFILE_ID_FIELD, profileId);
+        return accounts.findByPropertyValue(ProfileBacked.PROFILE_ID_FIELD, profileId);
     }
 }

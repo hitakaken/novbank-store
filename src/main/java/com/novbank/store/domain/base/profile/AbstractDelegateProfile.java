@@ -1,4 +1,4 @@
-package com.novbank.store.domain.base;
+package com.novbank.store.domain.base.profile;
 
 import java.util.Map;
 import java.util.Set;
@@ -6,8 +6,8 @@ import java.util.Set;
 /**
  * Created by CaoKe on 2015/4/19.
  */
-public abstract class AbstractDelegateProfiled implements Profiled{
-    public abstract Profiled delegate();
+public abstract class AbstractDelegateProfile implements ProfileSupport {
+    public abstract ProfileSupport delegate();
 
     @Override
     public Set<String> fieldNames() {
@@ -200,22 +200,22 @@ public abstract class AbstractDelegateProfiled implements Profiled{
     }
 
     @Override
-    public void putValues(Profiled other) {
+    public void putValues(ProfileSupport other) {
         delegate().putValues(other);
     }
 
     @Override
-    public void putValues(Profiled other, Map<String, Object> options) {
+    public void putValues(ProfileSupport other, Map<String, Object> options) {
         delegate().putValues(other, options);
     }
 
     @Override
-    public void putValues(Profiled other, boolean overwrite) {
+    public void putValues(ProfileSupport other, boolean overwrite) {
         delegate().putValues(other, overwrite);
     }
 
     @Override
-    public void putValues(Profiled other, Map<String, Object> options, boolean overwrite) {
+    public void putValues(ProfileSupport other, Map<String, Object> options, boolean overwrite) {
         delegate().putValues(other, options, overwrite);
     }
 }

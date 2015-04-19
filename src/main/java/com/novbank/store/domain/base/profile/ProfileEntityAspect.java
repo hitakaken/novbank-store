@@ -1,4 +1,4 @@
-package com.novbank.store.crossstore;
+package com.novbank.store.domain.base.profile;
 
 import com.novbank.store.helper.SpringApplicationContextHolder;
 import org.aspectj.lang.annotation.Aspect;
@@ -17,7 +17,7 @@ import org.springframework.data.neo4j.support.Neo4jTemplate;
 @DependsOn("springApplicationContextHolder")
 @Aspect
 @Configuration
-public class ProfiledEntityAspect {
+public class ProfileEntityAspect {
     @Autowired
     private transient Neo4jTemplate neo4jOps;
 
@@ -25,11 +25,11 @@ public class ProfiledEntityAspect {
     private transient MongoTemplate mongoOps;
 
     @DeclareMixin("(@ProfiledEntity *)")
-    public ProfiledBacked createDelegate(Object instance) {
-        return new MongoProfiledEntity(instance, mongoOps);
+    public ProfileBacked createDelegate(Object instance) {
+        return new MongoProfileEntity(instance, mongoOps);
     }
 
-    public static ProfiledEntityAspect aspectOf() {
-        return SpringApplicationContextHolder.getApplicationContext().getBean(ProfiledEntityAspect.class);
+    public static ProfileEntityAspect aspectOf() {
+        return SpringApplicationContextHolder.getApplicationContext().getBean(ProfileEntityAspect.class);
     }
 }

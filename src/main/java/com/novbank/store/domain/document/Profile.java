@@ -3,9 +3,8 @@ package com.novbank.store.domain.document;
 import com.google.common.collect.MapDifference;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import com.novbank.store.domain.base.AbstractProfiled;
+import com.novbank.store.domain.base.profile.AbstractProfile;
 import com.novbank.store.util.CollectionUtils;
-import org.joda.time.DateTime;
 import org.springframework.data.annotation.*;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.util.Assert;
@@ -16,7 +15,7 @@ import java.util.*;
  * Created by CaoKe on 2015/4/18.
  */
 @Document
-public class Profile extends AbstractProfiled {
+public class Profile extends AbstractProfile {
     @Id
     private String id;
 

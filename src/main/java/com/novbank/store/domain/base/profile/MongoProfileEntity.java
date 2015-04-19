@@ -1,23 +1,19 @@
-package com.novbank.store.crossstore;
+package com.novbank.store.domain.base.profile;
 
-import com.novbank.store.domain.base.AbstractDelegateProfiled;
-import com.novbank.store.domain.base.Profiled;
 import com.novbank.store.domain.document.Profile;
-import com.novbank.store.repository.mongo.ProfileRepository;
 import org.bson.types.ObjectId;
 import org.neo4j.graphdb.PropertyContainer;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.neo4j.aspects.core.GraphBacked;
 import org.springframework.data.neo4j.mapping.ManagedEntity;
-import org.springframework.data.neo4j.support.Neo4jTemplate;
 
 /**
  * Mongo 存储 Profile
  *
  * Created by CaoKe on 2015/4/19.
  */
-public class MongoProfiledEntity extends AbstractDelegateProfiled implements ProfiledBacked {
+public class MongoProfileEntity extends AbstractDelegateProfile implements ProfileBacked {
     @Transient
     private transient MongoTemplate mongoOps;
     @Transient
@@ -25,13 +21,13 @@ public class MongoProfiledEntity extends AbstractDelegateProfiled implements Pro
     @Transient
     private transient Object source;
 
-    public MongoProfiledEntity(Object source,  MongoTemplate mongoTemplate) {
+    public MongoProfileEntity(Object source, MongoTemplate mongoTemplate) {
         this.source = source;
         this.mongoOps = mongoTemplate;
     }
 
     @Override
-    public Profiled delegate() {
+    public ProfileSupport delegate() {
         return profile();
     }
 

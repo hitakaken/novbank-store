@@ -1,4 +1,4 @@
-package com.novbank.store.domain.base;
+package com.novbank.store.domain.base.profile;
 
 import java.util.Map;
 import java.util.Set;
@@ -6,7 +6,7 @@ import java.util.Set;
 /**
  * Created by CaoKe on 2015/4/18.
  */
-public interface Profiled {
+public interface ProfileSupport {
     /**
      * 获取字段列表
      *
@@ -117,8 +117,8 @@ public interface Profiled {
      *
      * @param other
      */
-    void putValues(Profiled other);
-    void putValues(Profiled other, Map<String,Object> options);
-    void putValues(Profiled other, boolean overwrite);
-    void putValues(Profiled other, Map<String,Object> options, boolean overwrite);
+    void putValues(ProfileSupport other);
+    void putValues(ProfileSupport other, Map<String,Object> options);
+    void putValues(ProfileSupport other, boolean overwrite);
+    void putValues(ProfileSupport other, Map<String,Object> options, boolean overwrite);
 }

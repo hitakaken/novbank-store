@@ -1,4 +1,4 @@
-package com.novbank.store.domain.base;
+package com.novbank.store.domain.base.profile;
 
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
@@ -10,7 +10,7 @@ import java.util.Set;
 /**
  * Created by HP on 2015/4/18.
  */
-public abstract class AbstractProfiled implements Profiled {
+public abstract class AbstractProfile implements ProfileSupport {
     @Override
     public abstract void putValue(String fieldName, Object value, Map<String, Object> options, boolean overwrite);
 
@@ -286,7 +286,7 @@ public abstract class AbstractProfiled implements Profiled {
     }
 
     @Override
-    public void putValues(Profiled other, Map<String, Object> options, boolean overwrite) {
+    public void putValues(ProfileSupport other, Map<String, Object> options, boolean overwrite) {
         if(other == null || other.fieldNames() ==null || other.fieldNames().isEmpty())
             return;
         for(String fieldName : other.fieldNames()){
@@ -300,17 +300,17 @@ public abstract class AbstractProfiled implements Profiled {
     }
 
     @Override
-    public void putValues(Profiled other, Map<String, Object> options) {
+    public void putValues(ProfileSupport other, Map<String, Object> options) {
         putValues(other, options, false);
     }
 
     @Override
-    public void putValues(Profiled other, boolean overwrite) {
+    public void putValues(ProfileSupport other, boolean overwrite) {
         putValues(other, null, overwrite);
     }
 
     @Override
-    public void putValues(Profiled other) {
+    public void putValues(ProfileSupport other) {
         putValues(other, false);
     }
 }

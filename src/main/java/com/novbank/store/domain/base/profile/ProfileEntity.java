@@ -1,4 +1,4 @@
-package com.novbank.store.crossstore;
+package com.novbank.store.domain.base.profile;
 
 import org.springframework.data.annotation.Persistent;
 
@@ -11,6 +11,6 @@ import java.lang.annotation.*;
 @Target(ElementType.TYPE)
 @Inherited
 @Persistent
-public @interface ProfiledEntity {
+public @interface ProfileEntity {
 
 }
