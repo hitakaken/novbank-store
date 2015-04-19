@@ -9,14 +9,15 @@ import org.neo4j.graphdb.PropertyContainer;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.neo4j.aspects.core.GraphBacked;
+import org.springframework.data.neo4j.mapping.ManagedEntity;
 import org.springframework.data.neo4j.support.Neo4jTemplate;
 
 /**
+ * Mongo 存储 Profile
+ *
  * Created by CaoKe on 2015/4/19.
  */
-public class DefaultProfiledEntityProxy extends AbstractDelegateProfiled implements ProfiledBacked {
-    @Transient
-    private transient Neo4jTemplate neo4jOps;
+public class MongoProfiledEntity extends AbstractDelegateProfiled implements ProfiledBacked {
     @Transient
     private transient MongoTemplate mongoOps;
     @Transient
@@ -24,9 +25,8 @@ public class DefaultProfiledEntityProxy extends AbstractDelegateProfiled impleme
     @Transient
     private transient Object source;
 
-    public DefaultProfiledEntityProxy(Object source, Neo4jTemplate neo4jTemplate, MongoTemplate mongoTemplate) {
+    public MongoProfiledEntity(Object source,  MongoTemplate mongoTemplate) {
         this.source = source;
-        this.neo4jOps = neo4jTemplate;
         this.mongoOps = mongoTemplate;
     }
 
@@ -107,6 +107,7 @@ public class DefaultProfiledEntityProxy extends AbstractDelegateProfiled impleme
         }
         if(profileInitialized()) return;
         initializeProfile();
-        neo4jOps.save(source);
+        if(source instanceof ManagedEntity)
+            ((ManagedEntity) source).persist();
     }
 }

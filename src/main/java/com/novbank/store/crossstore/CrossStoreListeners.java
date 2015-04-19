@@ -1,7 +1,10 @@
 package com.novbank.store.crossstore;
 
+import com.mongodb.DBObject;
+import com.novbank.store.domain.document.Profile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
+import org.springframework.data.mongodb.core.mapping.event.AbstractMongoEventListener;
 import org.springframework.data.neo4j.lifecycle.AfterSaveEvent;
 import org.springframework.stereotype.Component;
 
@@ -26,5 +29,15 @@ public class CrossStoreListeners {
         }
     }
 
+    @Component
+    public class ProfileStoreListener extends AbstractMongoEventListener<Profile>{
+        @Autowired
+        public ProfileStoreListener() {
+        }
 
+        @Override
+        public void onBeforeSave(Profile source, DBObject dbo) {
+            //
+        }
+    }
 }

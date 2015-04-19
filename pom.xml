@@ -72,9 +72,9 @@
         <mysql.mxj.version>5.0.12</mysql.mxj.version>
         <!-- No SQL -->
         <!-- Neo4j -->
-        <!--<neo4j.version>2.1.8</neo4j.version>-->
+        <neo4j.version>2.1.8</neo4j.version>
         <!-- Spring Data Neo4j Rest 对2.2支持存在bug -->
-        <neo4j.version>2.2.1</neo4j.version>
+        <!--<neo4j.version>2.2.1</neo4j.version>-->
         <neo4j.spatial.version>0.13-neo4j-2.1.4</neo4j.spatial.version>
         <neo4j.cypher-dsl.version>2.0.1</neo4j.cypher-dsl.version>
         <!-- Mongo -->
@@ -303,10 +303,15 @@
             <version>${neo4j.cypher-dsl.version}</version>
         </dependency>-->
         <!-- After 2.2.0 -->
-        <dependency>
+        <!--<dependency>
             <groupId>org.neo4j</groupId>
             <artifactId>neo4j-io</artifactId>
             <version>${neo4j.version}</version>
+        </dependency>-->
+        <dependency>
+            <groupId>com.tinkerpop.blueprints</groupId>
+            <artifactId>blueprints-neo4j-graph</artifactId>
+            <version>${tinkerpop.blueprints.version}</version>
         </dependency>
 
         <!-- Redis -->
@@ -442,6 +447,12 @@
             <groupId>org.apache.mahout</groupId>
             <artifactId>mahout-math</artifactId>
             <version>${mahout.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
+            <version>${joda.version}</version>
         </dependency>
 
         <!-- test -->

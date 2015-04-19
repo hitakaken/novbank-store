@@ -5,9 +5,8 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.novbank.store.domain.base.AbstractProfiled;
 import com.novbank.store.util.CollectionUtils;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.Transient;
+import org.joda.time.DateTime;
+import org.springframework.data.annotation.*;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.util.Assert;
 
@@ -21,6 +20,15 @@ public class Profile extends AbstractProfiled {
     @Id
     private String id;
 
+    @CreatedDate
+    private Date createTime;
+
+    @LastModifiedDate
+    private Date lastModified;
+
+    @Version
+    private Long version;
+
     /**
      *  实现 Profiled 的 Java 数据结构
      */
@@ -32,10 +40,8 @@ public class Profile extends AbstractProfiled {
 
     private Set<String> labels;
 
-    @CreatedDate
-    private Date createTime;
-
-    private Date lastModified;
+    public Profile() {
+    }
 
     public Profile(String id) {
         this.id = id;
@@ -50,6 +56,30 @@ public class Profile extends AbstractProfiled {
         this.id = id;
     }
 
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Date getLastModified() {
+        return lastModified;
+    }
+
+    public void setLastModified(Date  lastModified) {
+        this.lastModified = lastModified;
+    }
+
+    public Long getVersion() {
+        return version;
+    }
+
+    public void setVersion(Long version) {
+        this.version = version;
+    }
+
     public Map<String, Set<Map<String, Object>>> getFields() {
         return fields;
     }
@@ -60,7 +90,9 @@ public class Profile extends AbstractProfiled {
 
     /** Implements Profiled **/
     public final static String VALUE_FIELD="_value";
-    protected final static Set<String> IGNORE_FIELDS= Sets.newHashSet(VALUE_FIELD);
+    public final static String TIMESTAMP_FIELD="_timestamp";
+    protected final static Set<String> IGNORE_COMPARE_FIELDS = Sets.newHashSet(VALUE_FIELD,TIMESTAMP_FIELD);
+    protected final static Set<String> EXCLUDE_OPTION_FIELDS = Sets.newHashSet(VALUE_FIELD);
     //public final static String OPTIONS_FIELD="_options";
 
     @Override
@@ -79,20 +111,21 @@ public class Profile extends AbstractProfiled {
         if(options == null)   options = new HashMap<>();
         CollectionUtils.removeEmptyValueEntry(options);
         options.put(VALUE_FIELD, fieldValue);
+        options.put(TIMESTAMP_FIELD,System.currentTimeMillis());
         boolean replaced = false;
         for(Map<String,Object> entry: fields.get(fieldName)){
             MapDifference difference = Maps.difference(options, entry);
-            if(difference.areEqual()){
-                replaced = true;
-                break;
-            }
             if(difference.entriesOnlyOnLeft().isEmpty() && difference.entriesOnlyOnRight().isEmpty()
-                    && difference.entriesDiffering().size() ==1 && difference.entriesDiffering().containsKey(VALUE_FIELD)){
-                entry.put(VALUE_FIELD,fieldValue);
+                    && Sets.difference(difference.entriesDiffering().keySet(), IGNORE_COMPARE_FIELDS).size()==0){
+                if(difference.entriesDiffering().containsKey(VALUE_FIELD)){
+                    entry.put(VALUE_FIELD,fieldValue);
+                    entry.put(TIMESTAMP_FIELD,System.currentTimeMillis());
+                    changed = true;
+                }
                 replaced = true;
-                changed = true;
                 break;
             }
+
         }
         if(!replaced) {
             fields.get(fieldName).add(Maps.newHashMap(options));
@@ -116,9 +149,9 @@ public class Profile extends AbstractProfiled {
         if(!fields.containsKey(fieldName))   return results;
         for(Map<String,Object> entry: fields.get(fieldName)){
             MapDifference difference = Maps.difference(options, entry);
-            if(difference.entriesOnlyOnLeft().isEmpty() && difference.entriesDiffering().isEmpty()){
-                if(!strictly || (difference.entriesOnlyOnRight().size() ==1 && difference.entriesOnlyOnRight().containsKey(VALUE_FIELD)))
-                    results.put(CollectionUtils.copyMapExcludeKeys(entry,IGNORE_FIELDS), entry.get(VALUE_FIELD));
+            if(difference.entriesOnlyOnLeft().isEmpty() && Sets.difference(difference.entriesDiffering().keySet(), IGNORE_COMPARE_FIELDS).size()==0){
+                if(!strictly || Sets.difference(difference.entriesOnlyOnRight().keySet(),IGNORE_COMPARE_FIELDS).size()==0)
+                    results.put(CollectionUtils.copyMapExcludeKeys(entry, EXCLUDE_OPTION_FIELDS), entry.get(VALUE_FIELD));
             }
         }
         return results;
@@ -135,7 +168,7 @@ public class Profile extends AbstractProfiled {
         Object value = null;
         double currentSimilarity = LOWEST_SIMILARITY;
         for(Map<String,Object> entry: fields.get(fieldName)){
-            double similarity = CollectionUtils.calculateSimilarity(options,entry,IGNORE_FIELDS, strict, true, 1.0, 0.2, 3.0);
+            double similarity = CollectionUtils.calculateSimilarity(options,entry, IGNORE_COMPARE_FIELDS, strict, true, 1.0, 0.2, 3.0);
             if(similarity>currentSimilarity || (USE_LATEST && similarity == currentSimilarity)){
                 currentSimilarity = similarity;
                 value = entry.get(VALUE_FIELD);

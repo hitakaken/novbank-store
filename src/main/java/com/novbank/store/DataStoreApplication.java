@@ -5,6 +5,8 @@ import com.mongodb.MongoClientOptions;
 import com.novbank.store.helper.DataSourceHelper;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -16,9 +18,13 @@ import org.springframework.boot.context.web.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
+import org.springframework.data.auditing.IsNewAwareAuditingHandler;
+import org.springframework.data.mongodb.config.EnableMongoAuditing;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 import org.springframework.data.neo4j.aspects.config.Neo4jAspectConfiguration;
 import org.springframework.data.neo4j.config.EnableNeo4jRepositories;
+import org.springframework.data.neo4j.lifecycle.AuditingEventListener;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 
 /**
@@ -29,6 +35,7 @@ import org.springframework.data.neo4j.config.EnableNeo4jRepositories;
 @EnableBatchProcessing
 @EnableAspectJAutoProxy
 @EnableMongoRepositories(basePackages = "com.novbank.store.repository.mongo")
+@EnableMongoAuditing
 @EnableConfigurationProperties(DataSourceHelper.Neo4jProperties.class)
 public class DataStoreApplication  extends SpringBootServletInitializer {
     public static Object[] sources = new Object[]{
@@ -37,9 +44,30 @@ public class DataStoreApplication  extends SpringBootServletInitializer {
     @Autowired
     private DataSourceHelper.Neo4jProperties neo4jProperties;
 
-    @Bean
+    @Bean(destroyMethod = "shutdown")
     public GraphDatabaseService graphDatabaseService() throws Exception {
         return DataSourceHelper.graphDatabaseService(neo4jProperties);
+    }
+
+    @Configuration
+    @EnableNeo4jRepositories(basePackages = "com.novbank.store.repository.neo4j")
+    @EnableTransactionManagement
+    public static class Neo4jStoreConfiguration extends Neo4jAspectConfiguration{
+        public Neo4jStoreConfiguration() {
+            setBasePackage("com.novbank.store.domain.graph");
+        }
+
+        /* TODO Why not work?
+        @Bean
+        public AuditingEventListener auditingEventListener() throws Exception {
+            final IsNewAwareAuditingHandler auditingHandler =  new IsNewAwareAuditingHandler(neo4jMappingContext());
+            return new AuditingEventListener(new ObjectFactory<IsNewAwareAuditingHandler>() {
+                @Override
+                public IsNewAwareAuditingHandler getObject() throws BeansException {
+                    return auditingHandler;
+                }
+            });
+        }*/
     }
 
     @Autowired
@@ -50,29 +78,8 @@ public class DataStoreApplication  extends SpringBootServletInitializer {
 
     @Bean
     public Mongo mongo(){
-        return DataSourceHelper.mongo3(mongoProperties,mongoOptions);
+        return DataSourceHelper.mongo3(mongoProperties, mongoOptions);
     }
-
-    @Configuration
-    @EnableNeo4jRepositories(basePackages = "com.novbank.store.repository.neo4j")
-    public static class Neo4jStoreConfiguration extends Neo4jAspectConfiguration{
-        public Neo4jStoreConfiguration() {
-            setBasePackage("com.novbank.store.domain.graph");
-        }
-    }
-
-    /*@Bean
-    public ProfiledNodeAspect nodeProfiledAspect(MongoTemplate mongoTemplate) throws Exception {
-        ProfiledNodeAspect aspect = new ProfiledNodeAspect();
-        aspect.setMongoTemplate(mongoTemplate);
-        return aspect;
-    }*/
-
-    /*@Bean
-    public CrossStoreEventListeners.AfterSaveEventListener afterSaveEventListener(Neo4jTemplate neo4jTemplate, MongoTemplate mongoTemplate){
-        return new CrossStoreEventListeners.AfterSaveEventListener(neo4jTemplate,mongoTemplate);
-    }*/
-
 
     public static void main(String... args) {
         SpringApplication.run(sources, args);
@@ -81,6 +88,7 @@ public class DataStoreApplication  extends SpringBootServletInitializer {
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
         return application.sources(sources).showBanner(false).listeners();
+
     }
 
 }
