@@ -1,8 +1,6 @@
 package com.novbank.store.domain.graph;
 
 import com.novbank.store.crossstore.ProfiledBacked;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.neo4j.annotation.Fetch;
 import org.springframework.data.neo4j.annotation.GraphId;
 import org.springframework.data.neo4j.aspects.core.NodeBacked;
 import org.springframework.data.neo4j.aspects.core.RelationshipBacked;
@@ -15,8 +13,6 @@ import java.io.Serializable;
  */
 public abstract class Identifiable implements Serializable{
     @GraphId
-    @Id
-    @Fetch
     protected Long id;
 
     public Long getId() {

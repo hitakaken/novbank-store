@@ -1,26 +1,11 @@
 package com.novbank.store.crossstore;
 
-import com.mongodb.BasicDBObject;
-import com.novbank.store.domain.document.Profile;
-import org.bson.BSONObject;
-import org.bson.types.ObjectId;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.neo4j.annotation.Fetch;
-import org.springframework.data.neo4j.annotation.GraphProperty;
-import org.springframework.data.neo4j.annotation.Indexed;
-import org.springframework.data.neo4j.aspects.core.NodeBacked;
-
-import java.util.Map;
-import java.util.Set;
-
 /**
  * Created by HP on 2015/4/17.
  */
-public privileged aspect ProfiledNodeBacking {
-    private static final Logger LOGGER = LoggerFactory.getLogger(ProfiledNodeBacking.class);
-    declare parents : (@ProfiledNode *) implements ProfiledBacked;
+public /*privileged aspect*/ class ProfiledNodeBacking {
+    /*private static final Logger LOGGER = LoggerFactory.getLogger(ProfiledNodeBacking.class);
+    declare parents : (@ProfiledNode *) implements ProfiledBacked, Profiled;
 
     private MongoTemplate mongoTemplate;
     public void setMongoTemplate(MongoTemplate mongoTemplate) {
@@ -49,7 +34,7 @@ public privileged aspect ProfiledNodeBacking {
         return profileId;
     }
 
-    public Profile ProfiledBacked.profile(){
+    public Profile ProfiledBacked.getProfile(){
         if(_profile==null){
             if(profileId!=null){
                 _profile = mongoTemplate().findById(profileId,Profile.class);
@@ -64,11 +49,12 @@ public privileged aspect ProfiledNodeBacking {
         _changed = true;
         profileId = ObjectId.get().toString();
         _profile = new Profile(profileId);
-        /*if(asNodeBack().hasPersistentState())
-            asNodeBack().getPersistentState().setProperty(CrossStoreConstants.PROFILE_ID_FIELD,profileId);*/
+        _profile.setChanged(true);
+        *//*if(asNodeBack().hasPersistentState())
+            asNodeBack().getPersistentState().setProperty(CrossStoreConstants.PROFILE_ID_FIELD,profileId);*//*
     }
 
-    /*public Object ProfiledBacked.put(String key, Object v){
+    *//*public Object ProfiledBacked.put(String key, Object v){
         _changed = true;
         return underlyingProfile().put(key,v);
     }
@@ -93,7 +79,7 @@ public privileged aspect ProfiledNodeBacking {
     }
     public Set<String> ProfiledBacked.fieldSet(){
         return underlyingProfile().keySet();
-    }*/
+    }*//*
 
     public boolean ProfiledBacked.isProfileChanged(){
         return _changed;
@@ -106,5 +92,5 @@ public privileged aspect ProfiledNodeBacking {
     public static MongoTemplate mongoTemplate() {
         return ProfiledNodeBacking.aspectOf().mongoTemplate;
     }
-
+*/
 }

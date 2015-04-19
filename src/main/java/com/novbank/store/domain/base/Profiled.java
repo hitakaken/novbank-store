@@ -1,4 +1,4 @@
-package com.novbank.store.domain;
+package com.novbank.store.domain.base;
 
 import java.util.Map;
 import java.util.Set;
@@ -20,12 +20,12 @@ public interface Profiled {
      * @param fieldName
      * @return
      */
-    Set getFieldValues(String fieldName);
-    Set getFieldValues(String fieldName,Map<String,Object> options);
-    Set getFieldValuesStrictly(String fieldName,Map<String,Object> options);
-    Map<String,Set> getFieldsValues(Iterable<String> fieldNames);
-    Map<String,Set> getFieldsValues(Iterable<String> fieldNames,Map<String,Object> options);
-    Map<String,Set> getFieldsValuesStrictly(Iterable<String> fieldNames,Map<String,Object> options);
+    Set fieldValues(String fieldName);
+    Set fieldValues(String fieldName,Map<String,Object> options);
+    Set fieldValuesStrictly(String fieldName,Map<String,Object> options);
+    Map<String,Set> fieldsValues(Iterable<String> fieldNames);
+    Map<String,Set> fieldsValues(Iterable<String> fieldNames,Map<String,Object> options);
+    Map<String,Set> fieldsValuesStrictly(Iterable<String> fieldNames,Map<String,Object> options);
 
     /**
      * 获取所有字段值（带条件）
@@ -33,12 +33,12 @@ public interface Profiled {
      * @param fieldName
      * @return
      */
-    Map<Map<String,Object>,Object> getFieldValuesWithOptions(String fieldName);
-    Map<Map<String,Object>,Object> getFieldValuesWithOptions(String fieldName,Map<String,Object> options);
-    Map<Map<String,Object>,Object> getFieldValuesWithOptionsStrictly(String fieldName,Map<String,Object> options);
-    Map<String,Map<Map<String,Object>,Object>> getFieldsValuesWithOptions(Iterable<String> fieldNames);
-    Map<String,Map<Map<String,Object>,Object>> getFieldsValuesWithOptions(Iterable<String> fieldNames,Map<String,Object> options);
-    Map<String,Map<Map<String,Object>,Object>> getFieldsValuesWithOptionsStrictly(Iterable<String> fieldNames,Map<String,Object> options);
+    Map<Map<String,Object>,Object> fieldValuesWithOptions(String fieldName);
+    Map<Map<String,Object>,Object> fieldValuesWithOptions(String fieldName,Map<String,Object> options);
+    Map<Map<String,Object>,Object> fieldValuesWithOptionsStrictly(String fieldName,Map<String,Object> options);
+    Map<String,Map<Map<String,Object>,Object>> fieldsValuesWithOptions(Iterable<String> fieldNames);
+    Map<String,Map<Map<String,Object>,Object>> fieldsValuesWithOptions(Iterable<String> fieldNames,Map<String,Object> options);
+    Map<String,Map<Map<String,Object>,Object>> fieldsValuesWithOptionsStrictly(Iterable<String> fieldNames,Map<String,Object> options);
 
     /**
      * 获取默认字段值
@@ -46,7 +46,7 @@ public interface Profiled {
      * @param fieldName 字段名
      * @return
      */
-    Object getFieldValue(String fieldName);
+    Object fieldValue(String fieldName);
 
     /**
      * 获取最接近条件的字段值
@@ -55,17 +55,17 @@ public interface Profiled {
      * @param options 条件
      * @return
      */
-    Object getFieldValue(String fieldName, Map<String,Object> options);
-    Object getFieldValueStrictly(String fieldName, Map<String,Object> options);
-    //Object getFieldValue(String fieldName, Map<String,Object> options, boolean strict);
+    Object fieldValue(String fieldName, Map<String,Object> options);
+    Object fieldValueStrictly(String fieldName, Map<String,Object> options);
+    //Object fieldValue(String fieldName, Map<String,Object> options, boolean strict);
 
     //直接条件查询接口
-    Object getFieldValue(String fieldName, String k1, Object v1);
-    Object getFieldValue(String fieldName, String k1, Object v1, String k2, Object v2);
-    Object getFieldValue(String fieldName, String k1, Object v1, String k2, Object v2, String k3, Object v3);
-    Object getFieldValueStrictly(String fieldName, String k1, Object v1);
-    Object getFieldValueStrictly(String fieldName, String k1, Object v1, String k2, Object v2);
-    Object getFieldValueStrictly(String fieldName, String k1, Object v1, String k2, Object v2, String k3, Object v3);
+    Object fieldValue(String fieldName, String k1, Object v1);
+    Object fieldValue(String fieldName, String k1, Object v1, String k2, Object v2);
+    Object fieldValue(String fieldName, String k1, Object v1, String k2, Object v2, String k3, Object v3);
+    Object fieldValueStrictly(String fieldName, String k1, Object v1);
+    Object fieldValueStrictly(String fieldName, String k1, Object v1, String k2, Object v2);
+    Object fieldValueStrictly(String fieldName, String k1, Object v1, String k2, Object v2, String k3, Object v3);
 
     /**
      * 设置字段值（无额外属性）
@@ -83,6 +83,7 @@ public interface Profiled {
      * @param options
      */
     void setFieldValue(String fieldName, Object fieldValue, Map<String,Object> options);
+    void setFieldValue(String fieldName, Object fieldValue, Map<String,Object> options, boolean overwrite);
 
     void setFieldValue(String fieldName, Object fieldValue, String k1, Object v1);
     void setFieldValue(String fieldName, Object fieldValue, String k1, Object v1, String k2, Object v2);

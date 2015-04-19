@@ -1,4 +1,4 @@
-package com.novbank.store.domain;
+package com.novbank.store.domain.base;
 
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
@@ -11,7 +11,13 @@ import java.util.Set;
  * Created by HP on 2015/4/18.
  */
 public abstract class AbstractProfiled implements Profiled {
-    public abstract void setFieldValue(String fieldName, Object fieldValue, Map<String, Object> options);
+    @Override
+    public abstract void setFieldValue(String fieldName, Object fieldValue, Map<String, Object> options, boolean overwrite);
+
+    @Override
+    public void setFieldValue(String fieldName, Object fieldValue, Map<String, Object> options){
+        setFieldValue(fieldName,fieldValue,options,true);
+    }
 
     @Override
     public void setFieldValue(String fieldName, Object fieldValue) {
@@ -33,14 +39,11 @@ public abstract class AbstractProfiled implements Profiled {
         setFieldValue(fieldName,fieldValue, new HashMap<String, Object>(){{put(k1,v1);put(k2,v2);put(k3,v3);}});
     }
 
-    public abstract boolean containsFieldOptions(String fieldName, Map<String,Object> options);
-
     @Override
     public void setFieldsValues(Map<String, Object> values, Map<String, Object> options, boolean overwrite) {
         if(values == null || values.isEmpty()) return;
         for(String fieldName : values.keySet()){
-            if(overwrite || !containsFieldOptions(fieldName,options))
-                setFieldValue(fieldName,options);
+            setFieldValue(fieldName,values.get(fieldName),options,overwrite);
         }
     }
 
@@ -89,53 +92,53 @@ public abstract class AbstractProfiled implements Profiled {
         setFieldsValues(values,new HashMap<String, Object>(){{put(k1,v1);put(k2,v2);put(k3,v3);}},overwrite);
     }
 
-    public abstract Map<Map<String, Object>, Object> getFieldValuesWithOptions(String fieldName, Map<String, Object> options, boolean strictly);
+    public abstract Map<Map<String, Object>, Object> fieldValuesWithOptions(String fieldName, Map<String, Object> options, boolean strictly);
 
     @Override
-    public Map<Map<String, Object>, Object> getFieldValuesWithOptions(String fieldName, Map<String, Object> options) {
-        return getFieldValuesWithOptions(fieldName,options,false);
+    public Map<Map<String, Object>, Object> fieldValuesWithOptions(String fieldName, Map<String, Object> options) {
+        return fieldValuesWithOptions(fieldName,options,false);
     }
 
     @Override
-    public Map<Map<String, Object>, Object> getFieldValuesWithOptionsStrictly(String fieldName, Map<String, Object> options) {
-        return getFieldValuesWithOptions(fieldName,options,true);
+    public Map<Map<String, Object>, Object> fieldValuesWithOptionsStrictly(String fieldName, Map<String, Object> options) {
+        return fieldValuesWithOptions(fieldName,options,true);
     }
 
     @Override
-    public Map<Map<String, Object>, Object> getFieldValuesWithOptions(String fieldName) {
-        return getFieldValuesWithOptions(fieldName,null);
+    public Map<Map<String, Object>, Object> fieldValuesWithOptions(String fieldName) {
+        return fieldValuesWithOptions(fieldName,null);
     }
 
     @Override
-    public Set getFieldValues(String fieldName) {
-        Map<Map<String, Object>, Object> result = getFieldValuesWithOptions(fieldName);
+    public Set fieldValues(String fieldName) {
+        Map<Map<String, Object>, Object> result = fieldValuesWithOptions(fieldName);
         return result!=null && !result.isEmpty() ? Sets.newHashSet(result.values()) :null;
     }
 
     @Override
-    public Set getFieldValues(String fieldName, Map<String, Object> options) {
-        Map<Map<String, Object>, Object> result =  getFieldValuesWithOptions(fieldName, options);
+    public Set fieldValues(String fieldName, Map<String, Object> options) {
+        Map<Map<String, Object>, Object> result =  fieldValuesWithOptions(fieldName, options);
         return result!=null && !result.isEmpty() ? Sets.newHashSet(result.values()) :null;
     }
 
     @Override
-    public Set getFieldValuesStrictly(String fieldName, Map<String, Object> options) {
-        Map<Map<String, Object>, Object> result = getFieldValuesWithOptionsStrictly(fieldName, options);
+    public Set fieldValuesStrictly(String fieldName, Map<String, Object> options) {
+        Map<Map<String, Object>, Object> result = fieldValuesWithOptionsStrictly(fieldName, options);
         return result!=null && !result.isEmpty() ? Sets.newHashSet(result.values()) :null;
     }
 
     @Override
-    public Map<String, Set> getFieldsValues(Iterable<String> fieldNames) {
+    public Map<String, Set> fieldsValues(Iterable<String> fieldNames) {
         Map<String,Set> results = Maps.newHashMap();
         return results;
     }
 
     @Override
-    public Map<String, Set> getFieldsValues(Iterable<String> fieldNames, Map<String, Object> options) {
+    public Map<String, Set> fieldsValues(Iterable<String> fieldNames, Map<String, Object> options) {
         Map<String,Set> results = Maps.newHashMap();
         if(fieldNames!=null){
             for(String fieldName : fieldNames){
-                Set result = getFieldValues(fieldName,options);
+                Set result = fieldValues(fieldName,options);
                 if(result!=null) results.put(fieldName,result);
             }
         }
@@ -143,11 +146,11 @@ public abstract class AbstractProfiled implements Profiled {
     }
 
     @Override
-    public Map<String, Set> getFieldsValuesStrictly(Iterable<String> fieldNames, Map<String, Object> options) {
+    public Map<String, Set> fieldsValuesStrictly(Iterable<String> fieldNames, Map<String, Object> options) {
         Map<String,Set> results = Maps.newHashMap();
         if(fieldNames!=null){
             for(String fieldName : fieldNames){
-                Set result = getFieldValuesStrictly(fieldName, options);
+                Set result = fieldValuesStrictly(fieldName, options);
                 if(result!=null) results.put(fieldName,result);
             }
         }
@@ -155,11 +158,11 @@ public abstract class AbstractProfiled implements Profiled {
     }
 
     @Override
-    public Map<String, Map<Map<String, Object>, Object>> getFieldsValuesWithOptions(Iterable<String> fieldNames) {
+    public Map<String, Map<Map<String, Object>, Object>> fieldsValuesWithOptions(Iterable<String> fieldNames) {
         Map<String, Map<Map<String, Object>, Object>> results = Maps.newHashMap();
         if(fieldNames!=null){
             for(String fieldName : fieldNames){
-                Map<Map<String, Object>, Object> result = getFieldValuesWithOptions(fieldName);
+                Map<Map<String, Object>, Object> result = fieldValuesWithOptions(fieldName);
                 if(result!=null) results.put(fieldName,result);
             }
         }
@@ -167,11 +170,11 @@ public abstract class AbstractProfiled implements Profiled {
     }
 
     @Override
-    public Map<String, Map<Map<String, Object>, Object>> getFieldsValuesWithOptions(Iterable<String> fieldNames, Map<String, Object> options) {
+    public Map<String, Map<Map<String, Object>, Object>> fieldsValuesWithOptions(Iterable<String> fieldNames, Map<String, Object> options) {
         Map<String, Map<Map<String, Object>, Object>> results = Maps.newHashMap();
         if(fieldNames!=null){
             for(String fieldName : fieldNames){
-                Map<Map<String, Object>, Object> result = getFieldValuesWithOptions(fieldName,options);
+                Map<Map<String, Object>, Object> result = fieldValuesWithOptions(fieldName,options);
                 if(result!=null) results.put(fieldName,result);
             }
         }
@@ -179,64 +182,64 @@ public abstract class AbstractProfiled implements Profiled {
     }
 
     @Override
-    public Map<String, Map<Map<String, Object>, Object>> getFieldsValuesWithOptionsStrictly(Iterable<String> fieldNames, Map<String, Object> options) {
+    public Map<String, Map<Map<String, Object>, Object>> fieldsValuesWithOptionsStrictly(Iterable<String> fieldNames, Map<String, Object> options) {
         Map<String, Map<Map<String, Object>, Object>> results = Maps.newHashMap();
         if(fieldNames!=null){
             for(String fieldName : fieldNames){
-                Map<Map<String, Object>, Object> result = getFieldValuesWithOptionsStrictly(fieldName, options);
+                Map<Map<String, Object>, Object> result = fieldValuesWithOptionsStrictly(fieldName, options);
                 if(result!=null) results.put(fieldName,result);
             }
         }
         return results;
     }
 
-    public abstract Object getFieldValue(String fieldName, Map<String,Object> options, boolean strict);
+    public abstract Object fieldValue(String fieldName, Map<String,Object> options, boolean strict);
 
     @Override
-    public Object getFieldValue(String fieldName, Map<String, Object> options) {
-        return getFieldValue(fieldName,options,false);
+    public Object fieldValue(String fieldName, Map<String, Object> options) {
+        return fieldValue(fieldName,options,false);
     }
 
     @Override
-    public Object getFieldValueStrictly(String fieldName, Map<String, Object> options) {
-        return getFieldValue(fieldName,options,true);
+    public Object fieldValueStrictly(String fieldName, Map<String, Object> options) {
+        return fieldValue(fieldName,options,true);
     }
 
     @Override
-    public Object getFieldValue(String fieldName) {
-        return getFieldValue(fieldName,null);
+    public Object fieldValue(String fieldName) {
+        return fieldValue(fieldName,null);
     }
 
     @Override
-    public Object getFieldValue(String fieldName, final String k1, final Object v1) {
-        return getFieldValue(fieldName,new HashMap<String, Object>(){{put(k1,v1);}});
+    public Object fieldValue(String fieldName, final String k1, final Object v1) {
+        return fieldValue(fieldName,new HashMap<String, Object>(){{put(k1,v1);}});
     }
 
     @Override
-    public Object getFieldValue(String fieldName, final String k1, final Object v1, final String k2, final Object v2) {
-        return getFieldValue(fieldName,new HashMap<String, Object>(){{put(k1,v1);put(k2,v2);}});
+    public Object fieldValue(String fieldName, final String k1, final Object v1, final String k2, final Object v2) {
+        return fieldValue(fieldName,new HashMap<String, Object>(){{put(k1,v1);put(k2,v2);}});
     }
 
     @Override
-    public Object getFieldValue(String fieldName, final String k1, final Object v1, final String k2, final Object v2, final String k3, final Object v3) {
-        return getFieldValue(fieldName,new HashMap<String, Object>(){{put(k1,v1);put(k2,v2);put(k3,v3);}});
+    public Object fieldValue(String fieldName, final String k1, final Object v1, final String k2, final Object v2, final String k3, final Object v3) {
+        return fieldValue(fieldName,new HashMap<String, Object>(){{put(k1,v1);put(k2,v2);put(k3,v3);}});
     }
 
     @Override
-    public Object getFieldValueStrictly(String fieldName, final String k1, final Object v1) {
-        return getFieldValueStrictly(fieldName, new HashMap<String, Object>() {{
+    public Object fieldValueStrictly(String fieldName, final String k1, final Object v1) {
+        return fieldValueStrictly(fieldName, new HashMap<String, Object>() {{
             put(k1, v1);
         }});
     }
 
     @Override
-    public Object getFieldValueStrictly(String fieldName, final String k1, final Object v1, final String k2, final Object v2) {
-        return getFieldValueStrictly(fieldName, new HashMap<String, Object>() {{put(k1, v1);put(k2, v2);}});
+    public Object fieldValueStrictly(String fieldName, final String k1, final Object v1, final String k2, final Object v2) {
+        return fieldValueStrictly(fieldName, new HashMap<String, Object>() {{put(k1, v1);put(k2, v2);}});
     }
 
     @Override
-    public Object getFieldValueStrictly(String fieldName, final String k1, final Object v1, final String k2, final Object v2, final String k3, final Object v3) {
-        return getFieldValueStrictly(fieldName, new HashMap<String, Object>() {{put(k1, v1);put(k2, v2);put(k3, v3);}});
+    public Object fieldValueStrictly(String fieldName, final String k1, final Object v1, final String k2, final Object v2, final String k3, final Object v3) {
+        return fieldValueStrictly(fieldName, new HashMap<String, Object>() {{put(k1, v1);put(k2, v2);put(k3, v3);}});
     }
 
     @Override
@@ -244,12 +247,11 @@ public abstract class AbstractProfiled implements Profiled {
         if(other == null || other.fieldNames() ==null || other.fieldNames().isEmpty())
             return;
         for(String fieldName : other.fieldNames()){
-            for(Map.Entry<Map<String,Object>,Object> entry:other.getFieldValuesWithOptions(fieldName).entrySet()){
+            for(Map.Entry<Map<String,Object>,Object> entry:other.fieldValuesWithOptions(fieldName).entrySet()){
                 Map<String,Object> key = entry.getKey();
                 Object value = entry.getValue();
                 if(options!=null) key.putAll(options);
-                if(overwrite || !containsFieldOptions(fieldName,options))
-                    setFieldValue(fieldName,options);
+                setFieldValue(fieldName,value,options,overwrite);
             }
         }
     }

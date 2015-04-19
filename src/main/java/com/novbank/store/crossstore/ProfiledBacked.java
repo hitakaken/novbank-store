@@ -1,15 +1,21 @@
 package com.novbank.store.crossstore;
 
 
-import com.novbank.store.domain.document.Profile;
-import com.novbank.store.domain.Profiled;
+import com.novbank.store.domain.base.Profiled;
 
 /**
  * Created by HP on 2015/4/17.
  */
 public interface ProfiledBacked extends Profiled {
-    String getProfileId();
-    //Profile profile();
-    boolean isProfileChanged();
-    void completeProfileChange();
+    String PROFILE_ID_FIELD = "_profile_id";
+    String PROFILE_ID_INDEX = "_profile_id_index";
+    String ID_FIELD = "_id";
+    String TYPE_FIELD = "_type";
+
+    boolean profileInitialized();
+    boolean profileLoaded();
+    boolean profileChanged();
+    String profileId();
+    void initializeProfile();
+    void persistProfile();
 }

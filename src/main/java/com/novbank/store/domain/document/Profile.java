@@ -3,13 +3,16 @@ package com.novbank.store.domain.document;
 import com.google.common.collect.MapDifference;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import com.novbank.store.domain.AbstractProfiled;
+import com.novbank.store.domain.base.AbstractProfiled;
 import com.novbank.store.util.CollectionUtils;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.util.Assert;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by CaoKe on 2015/4/18.
@@ -44,6 +47,8 @@ public class Profile extends AbstractProfiled {
 
     /** Implements Profiled **/
     public final static String VALUE_FIELD="_value";
+    protected final static Set<String> IGNORE_FIELDS= Sets.newHashSet(VALUE_FIELD);
+
     //public final static String OPTIONS_FIELD="_options";
 
     @Override
@@ -51,49 +56,45 @@ public class Profile extends AbstractProfiled {
         return fields.keySet();
     }
 
+    protected transient boolean changed = false;
+
     @Override
-    public void setFieldValue(String fieldName, Object fieldValue, Map<String, Object> options) {
+    public void setFieldValue(String fieldName, Object fieldValue, Map<String, Object> options, boolean overwrite) {
         Assert.notNull(fieldName);
         if(!fields.containsKey(fieldName))
             fields.put(fieldName,new HashSet<Map<String, Object>>());
         if(options == null)   options = new HashMap<>();
         CollectionUtils.removeEmptyValueEntry(options);
         options.put(VALUE_FIELD, fieldValue);
-        boolean inserted = false;
+        boolean replaced = false;
         for(Map<String,Object> entry: fields.get(fieldName)){
             MapDifference difference = Maps.difference(options, entry);
             if(difference.areEqual()){
-                inserted = true;
+                replaced = true;
                 break;
             }
             if(difference.entriesOnlyOnLeft().isEmpty() && difference.entriesOnlyOnRight().isEmpty()
                     && difference.entriesDiffering().size() ==1 && difference.entriesDiffering().containsKey(VALUE_FIELD)){
                 entry.put(VALUE_FIELD,fieldValue);
-                inserted = true;
+                replaced = true;
+                changed = true;
                 break;
             }
         }
-        if(!inserted)
+        if(!replaced)
             fields.get(fieldName).add(Maps.newHashMap(options));
     }
 
-    @Override
-    public boolean containsFieldOptions(String fieldName, Map<String, Object> options) {
-        if(!fields.containsKey(fieldName))
-            return false;
-        if(options == null)   options = new HashMap<>();
-        for(Map<String,Object> entry: fields.get(fieldName)){
-            MapDifference difference = Maps.difference(options, entry);
-            if(difference.entriesOnlyOnLeft().isEmpty() && difference.entriesDiffering().isEmpty()
-                    && difference.entriesOnlyOnRight().size() ==1 && difference.entriesOnlyOnRight().containsKey(VALUE_FIELD)){
-                return true;
-            }
-        }
-        return false;
+    public boolean isChanged() {
+        return changed;
+    }
+
+    public void setChanged(boolean changed) {
+        this.changed = changed;
     }
 
     @Override
-    public Map<Map<String, Object>, Object> getFieldValuesWithOptions(String fieldName, Map<String, Object> options, boolean strictly) {
+    public Map<Map<String, Object>, Object> fieldValuesWithOptions(String fieldName, Map<String, Object> options, boolean strictly) {
         Assert.notNull(fieldName);
         if(options == null)   options = new HashMap<>();
         Map<Map<String, Object>, Object> results = Maps.newHashMap();
@@ -102,43 +103,25 @@ public class Profile extends AbstractProfiled {
             MapDifference difference = Maps.difference(options, entry);
             if(difference.entriesOnlyOnLeft().isEmpty() && difference.entriesDiffering().isEmpty()){
                 if(!strictly || (difference.entriesOnlyOnRight().size() ==1 && difference.entriesOnlyOnRight().containsKey(VALUE_FIELD)))
-                    results.put(CollectionUtils.copyMapExcludeKeys(entry,Sets.newHashSet(VALUE_FIELD)), entry.get(VALUE_FIELD));
+                    results.put(CollectionUtils.copyMapExcludeKeys(entry,IGNORE_FIELDS), entry.get(VALUE_FIELD));
             }
         }
         return results;
     }
 
+    public final static double LOWEST_SIMILARITY = 0.0;
+    public final static boolean USE_LATEST = true;
+
     @Override
-    public Object getFieldValue(String fieldName, Map<String, Object> options, boolean strict) {
+    public Object fieldValue(String fieldName, Map<String, Object> options, boolean strict) {
         Assert.notNull(fieldName);
         if(options == null)   options = new HashMap<>();
         if(!fields.containsKey(fieldName))   return null;
         Object value = null;
-        float currentSimilarity = 0;
+        double currentSimilarity = LOWEST_SIMILARITY;
         for(Map<String,Object> entry: fields.get(fieldName)){
-            MapDifference difference = Maps.difference(options, entry);
-            if(strict && !(difference.entriesOnlyOnLeft().isEmpty() && difference.entriesDiffering().isEmpty()))
-                continue;
-            //difference.entriesInCommon()
-            int lacks=0;
-            int ignoreLacks = 0;
-            for(Object key: difference.entriesOnlyOnLeft().keySet()){
-                if(difference.entriesOnlyOnLeft().get(key) == null)
-                    ignoreLacks++;
-                else
-                    lacks++;
-            }
-            int more = difference.entriesOnlyOnRight().size();
-            int match = difference.entriesInCommon().size();
-            int conflict = 0;
-            for(Object key:difference.entriesDiffering().keySet()){
-                if(options.get(key) ==null)
-                    match++;
-                else
-                    conflict++;
-            }
-            float similarity = 1 - (float)(lacks +(more -1) + conflict * 3)/(float) (match + more +conflict +lacks +ignoreLacks);
-            if(similarity>=currentSimilarity){
+            double similarity = CollectionUtils.calculateSimilarity(options,entry,IGNORE_FIELDS, strict, true, 1.0, 0.2, 3.0);
+            if(similarity>currentSimilarity || (USE_LATEST && similarity == currentSimilarity)){
                 currentSimilarity = similarity;
                 value = entry.get(VALUE_FIELD);
             }

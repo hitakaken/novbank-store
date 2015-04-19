@@ -11,6 +11,6 @@ import java.lang.annotation.*;
 @Target(ElementType.TYPE)
 @Inherited
 @Persistent
-public @interface ProfiledNode {
+public @interface ProfiledEntity {
 
 }

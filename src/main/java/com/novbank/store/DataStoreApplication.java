@@ -1,7 +1,6 @@
 package com.novbank.store;
 
 import com.novbank.store.crossstore.CrossStoreEventListeners;
-import com.novbank.store.crossstore.ProfiledNodeBacking;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.factory.GraphDatabaseFactory;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
@@ -12,6 +11,7 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.web.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 import org.springframework.data.neo4j.aspects.config.Neo4jAspectConfiguration;
@@ -25,6 +25,7 @@ import org.springframework.data.neo4j.support.Neo4jTemplate;
  */
 @SpringBootApplication
 @EnableBatchProcessing
+@EnableAspectJAutoProxy
 @EnableMongoRepositories(basePackages = "com.novbank.store.repository.mongo")
 public class DataStoreApplication  extends SpringBootServletInitializer {
     public static Object[] sources = new Object[]{
@@ -61,17 +62,17 @@ public class DataStoreApplication  extends SpringBootServletInitializer {
         }
     }
 
-    @Bean
-    public ProfiledNodeBacking nodeProfiledBacking(MongoTemplate mongoTemplate) throws Exception {
-        ProfiledNodeBacking aspect = ProfiledNodeBacking.aspectOf();
+    /*@Bean
+    public ProfiledNodeAspect nodeProfiledAspect(MongoTemplate mongoTemplate) throws Exception {
+        ProfiledNodeAspect aspect = new ProfiledNodeAspect();
         aspect.setMongoTemplate(mongoTemplate);
         return aspect;
-    }
+    }*/
 
-    @Bean
+    /*@Bean
     public CrossStoreEventListeners.AfterSaveEventListener afterSaveEventListener(Neo4jTemplate neo4jTemplate, MongoTemplate mongoTemplate){
         return new CrossStoreEventListeners.AfterSaveEventListener(neo4jTemplate,mongoTemplate);
-    }
+    }*/
 
 
     public static void main(String... args) {
