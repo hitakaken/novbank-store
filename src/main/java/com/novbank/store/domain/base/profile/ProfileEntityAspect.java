@@ -26,7 +26,7 @@ public class ProfileEntityAspect {
 
     @DeclareMixin("(@ProfiledEntity *)")
     public ProfileBacked createDelegate(Object instance) {
-        return new MongoProfileEntity(instance, mongoOps);
+        return new MongoProfileBacking(instance, mongoOps);
     }
 
     public static ProfileEntityAspect aspectOf() {

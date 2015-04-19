@@ -13,7 +13,7 @@ import org.springframework.data.neo4j.mapping.ManagedEntity;
  *
  * Created by CaoKe on 2015/4/19.
  */
-public class MongoProfileEntity extends AbstractDelegateProfile implements ProfileBacked {
+public class MongoProfileBacking extends AbstractDelegateProfile implements ProfileBacked {
     @Transient
     private transient MongoTemplate mongoOps;
     @Transient
@@ -21,7 +21,7 @@ public class MongoProfileEntity extends AbstractDelegateProfile implements Profi
     @Transient
     private transient Object source;
 
-    public MongoProfileEntity(Object source, MongoTemplate mongoTemplate) {
+    public MongoProfileBacking(Object source, MongoTemplate mongoTemplate) {
         this.source = source;
         this.mongoOps = mongoTemplate;
     }
