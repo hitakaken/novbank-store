@@ -20,8 +20,8 @@ public interface MetaProperty {
     Validator validator();
     //动态计算
     boolean isDynamic();
-    String dynamicQuery();
-    String dynamicQueryType();
+    String dynamicScript();
+    String dynamicScriptType();
     boolean isMandatory();
     //缓存
     boolean isCacheable();
