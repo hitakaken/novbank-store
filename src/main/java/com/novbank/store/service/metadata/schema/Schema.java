@@ -25,6 +25,4 @@ public interface Schema {
     MetaClass getOrCreateClass(final String iClassName, final MetaClass iSuperClass);
     Collection<MetaClass> getClasses();
     List<GlobalProperty> getGlobalProperties();
-
-
 }
