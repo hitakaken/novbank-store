@@ -25,10 +25,11 @@ public class CrossStoreListeners {
 
         @Override
         public void onApplicationEvent(BeforeSaveEvent event) {
+            System.out.println("Call Before Save Event");
             if(event.getEntity() instanceof Identifiable){
                 Identifiable entity = (Identifiable) event.getEntity();
                 entity.setVersion(entity.getVersion() == null ? 0 : entity.getVersion() + 1);
-                DateTime current = DateTime.now(DateTimeZone.forID("GMT+8"));
+                DateTime current = DateTime.now(DateTimeZone.UTC);
                 if(entity.getCreateTime() == null)
                     entity.setCreateTime(current);
                 entity.setLastModified(current);
@@ -43,9 +44,8 @@ public class CrossStoreListeners {
 
         @Override
         public void onApplicationEvent(AfterSaveEvent event) {
-            System.out.println("Call me!");
-            if((event.getEntity() instanceof ProfileBacked)
-                    && ((ProfileBacked) event.getEntity()).profileChanged()){
+            System.out.println("Call After Save Event");
+            if((event.getEntity() instanceof ProfileBacked)){
                 ((ProfileBacked) event.getEntity()).persistProfile();
             }
         }

@@ -1,8 +1,9 @@
 package com.novbank.store;
 
-import com.novbank.store.domain.base.resource.ResourceBacked;
 import com.novbank.store.domain.entity.foaf.Document;
-import com.novbank.store.service.AccountService;
+import com.novbank.store.domain.graph.Account;
+import com.novbank.store.service.account.AccountService;
+import org.bson.types.ObjectId;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,20 +24,23 @@ public class CrossStoreTests {
     AccountService accounts;
 
     @Autowired
-    private Neo4jTemplate template;
+    private Neo4jTemplate neo4jOps;
 
     @Autowired
-    private MongoTemplate mongoTemplate;
+    private MongoTemplate mongoOps;
 
 
 
     @Test
     public void testEntityManager(){
-        System.out.println("Start Testing!");
-        Document doc = new Document();
-        doc.setName("qQ");
-        System.out.println(doc.getName());
-
+        Account account = new Account();
+        account.setName(ObjectId.get().toString());
+        account.setPassword("ask");
+        account.asProfiled().putValue("QQ", "999");
+        account.asProfiled().save();
+        account.asProfiled().backupGraph();
+        account.asProfiled().save();
+        //accounts.save(account);
         //System.out.println(profile.keySet());
     }
 

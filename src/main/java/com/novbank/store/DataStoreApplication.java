@@ -35,7 +35,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
  * Created by HP on 2015/4/14.
  */
 @SpringBootApplication
-@EnableAutoConfiguration
 @EnableBatchProcessing
 @EnableAspectJAutoProxy
 @EnableMongoRepositories(basePackages = "com.novbank.store.repository.mongo")

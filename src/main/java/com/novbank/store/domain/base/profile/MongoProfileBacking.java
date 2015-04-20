@@ -3,16 +3,14 @@ package com.novbank.store.domain.base.profile;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import com.mongodb.DBRef;
 import com.novbank.store.domain.document.GraphInfo;
 import com.novbank.store.domain.document.Profile;
 import com.novbank.store.domain.graph.Identifiable;
 import org.bson.types.ObjectId;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
-import org.neo4j.graphdb.Label;
-import org.neo4j.graphdb.Node;
-import org.neo4j.graphdb.PropertyContainer;
-import org.neo4j.graphdb.Relationship;
+import org.neo4j.graphdb.*;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.neo4j.aspects.core.GraphBacked;
@@ -135,11 +133,24 @@ public class MongoProfileBacking extends AbstractDelegateProfile implements Prof
             }
             graph.setLabels(labels);
             graph.setProperties(readProperties(node));
+            System.out.println(node.hasProperty(PROFILE_ID_FIELD));
+            System.out.println(node.getProperty(PROFILE_ID_FIELD));
+            System.out.println(graph.getProperties().containsKey(PROFILE_ID_FIELD));
             Set<Map<String,Object>> relations = Sets.newHashSet();
-            for(Relationship relation: node.getRelationships()){
-                Map<String,Object> relationProp = readProperties(relation);
-                //relationProp.put("_relationship_direction_type", relation.get())
-                relation.getOtherNode(node);
+            for (Relationship relation: node.getRelationships(Direction.BOTH)){
+                Map<String, Object>relationProp =  readRelationship(relation,node);
+                relationProp.put(DIRECTION_FIELD,Direction.BOTH.name());
+                relations.add(relationProp);
+            }
+            for (Relationship relation: node.getRelationships(Direction.INCOMING)){
+                Map<String, Object>relationProp =  readRelationship(relation,node);
+                relationProp.put(DIRECTION_FIELD,Direction.INCOMING.name());
+                relations.add(relationProp);
+            }
+            for (Relationship relation: node.getRelationships(Direction.OUTGOING)){
+                Map<String, Object>relationProp =  readRelationship(relation,node);
+                relationProp.put(DIRECTION_FIELD,Direction.OUTGOING.name());
+                relations.add(relationProp);
             }
             graph.setRelations(relations);
         }
@@ -149,11 +160,30 @@ public class MongoProfileBacking extends AbstractDelegateProfile implements Prof
             Relationship relation = ((RelationshipBacked) source).getPersistentState();
             graph.setLabels(Sets.newHashSet(relation.getType().name()));
             graph.setProperties(readProperties(relation));
+            Set<Map<String,Object>> relations = Sets.newHashSet();
+            Map<String,Object> start = Maps.newHashMap();
+            Node startNode = relation.getStartNode();
+            start.put(ID_FIELD,startNode.getId());
+            if(startNode.hasProperty(PROFILE_ID_FIELD)){
+                start.put(PROFILE_ID_FIELD,
+                        new DBRef(PROFILE_COLLECTION_NAME,new ObjectId(startNode.getProperty(PROFILE_ID_FIELD).toString())));
+            }
+            relations.add(start);
+            Map<String,Object> end = Maps.newHashMap();
+            Node endNode = relation.getStartNode();
+            end.put(ID_FIELD,endNode.getId());
+            if(endNode.hasProperty(PROFILE_ID_FIELD)){
+                end.put(PROFILE_ID_FIELD,
+                        new DBRef(PROFILE_COLLECTION_NAME,new ObjectId(endNode.getProperty(PROFILE_ID_FIELD).toString())));
+            }
+            relations.add(end);
+            graph.setRelations(relations);
         }
         if(source instanceof Identifiable){
             graph.setVersion(((Identifiable) source).getVersion());
         }
-        graph.setBackupTime(DateTime.now(DateTimeZone.forID("GMT+8")));
+        graph.setBackupTime(DateTime.now(DateTimeZone.UTC));
+        profile.setGraph(graph);
     }
 
     private Map<String,Object> readProperties(PropertyContainer pc){
@@ -164,4 +194,24 @@ public class MongoProfileBacking extends AbstractDelegateProfile implements Prof
             }
         return properties;
     }
+
+    private Map<String,Object> readRelationship(Relationship relation, Node node){
+        Map<String,Object> relationProp = readProperties(relation);
+        relationProp.put(TYPE_FIELD, relation.getType().name());
+        Node other = relation.getOtherNode(node);
+        relationProp.put(ID_FIELD, other.getId());
+        if(other.hasProperty(PROFILE_ID_FIELD)){
+            relationProp.put(PROFILE_ID_FIELD,
+                    new DBRef(PROFILE_COLLECTION_NAME,new ObjectId(other.getProperty(PROFILE_ID_FIELD).toString())));
+        }
+        return relationProp;
+    }
+
+    @Override
+    public void save() {
+        persistProfile();
+        //Retry
+        persistProfile();
+    }
+
 }

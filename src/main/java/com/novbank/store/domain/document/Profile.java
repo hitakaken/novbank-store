@@ -204,6 +204,7 @@ public class Profile extends AbstractProfile {
 
     public void setGraph(GraphInfo graph) {
         this.graph = graph;
+        this.changed = true;
     }
 
 

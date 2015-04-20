@@ -435,6 +435,12 @@
             <artifactId>aspectjweaver</artifactId>
             <version>${aspectj.version}</version>
         </dependency>
+        <!-- CGLib -->
+        <dependency>
+            <groupId>cglib</groupId>
+            <artifactId>cglib-nodep</artifactId>
+            <version>${cglib.version}</version>
+        </dependency>
         <!-- Groovy -->
         <dependency>
             <groupId>org.codehaus.groovy</groupId>

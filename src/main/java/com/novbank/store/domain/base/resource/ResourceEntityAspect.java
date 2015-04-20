@@ -1,7 +1,7 @@
 package com.novbank.store.domain.base.resource;
 
 import com.novbank.store.helper.SpringApplicationContextHolder;
-import com.novbank.store.service.ResourceService;
+import com.novbank.store.service.resource.ResourceService;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,12 +30,12 @@ public class ResourceEntityAspect {
     @Pointcut("execution(com.novbank.store.domain.base.resource.ResourceBacked+.new(..)) && !execution(com.novbank.store.domain.base.resource.ResourceBacked+.new(com.novbank.store.domain.graph.Resource)) && this(entity)")
     public void arbitraryUserConstructorOfResourceObject(ResourceBacked entity){}
 
-    @After("arbitraryUserConstructorOfResourceObject(entity)")
+    /*@After("arbitraryUserConstructorOfResourceObject(entity)")
     public void afterArbitraryUserConstructorOfResourceObject(ResourceBacked entity){
         if(entity.resource()==null){
 
         }
-    }
+    }*/
 
     @Around("entityFieldGet(entity)")
     public Object aroundEntityFieldGet(ProceedingJoinPoint pjp,ResourceBacked entity) throws Throwable{
