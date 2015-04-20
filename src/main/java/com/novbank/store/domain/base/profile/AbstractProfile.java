@@ -1,5 +1,6 @@
 package com.novbank.store.domain.base.profile;
 
+import com.google.common.base.Predicate;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
@@ -133,31 +134,30 @@ public abstract class AbstractProfile implements ProfileSupport {
 
     @Override
     public Map<Map<String, Object>, Object> valuesWithOptions(String fieldName) {
-        return valuesWithOptions(fieldName, null);
+        return valuesWithOptions(fieldName, Maps.<String, Object>newHashMap());
     }
 
     @Override
     public Set values(String fieldName) {
         Map<Map<String, Object>, Object> result = valuesWithOptions(fieldName);
-        return result!=null && !result.isEmpty() ? Sets.newHashSet(result.values()) :null;
+        return result!=null && !result.isEmpty() ? Sets.newHashSet(result.values()) : Sets.newHashSet();
     }
 
     @Override
     public Set values(String fieldName, Map<String, Object> options) {
         Map<Map<String, Object>, Object> result =  valuesWithOptions(fieldName, options);
-        return result!=null && !result.isEmpty() ? Sets.newHashSet(result.values()) :null;
+        return result!=null && !result.isEmpty() ? Sets.newHashSet(result.values()) :Sets.newHashSet();
     }
 
     @Override
     public Set valuesStrictly(String fieldName, Map<String, Object> options) {
         Map<Map<String, Object>, Object> result = valuesWithOptionsStrictly(fieldName, options);
-        return result!=null && !result.isEmpty() ? Sets.newHashSet(result.values()) :null;
+        return result!=null && !result.isEmpty() ? Sets.newHashSet(result.values()) :Sets.newHashSet();
     }
 
     @Override
     public Map<String, Set> values(Iterable<String> fieldNames) {
-        Map<String,Set> results = Maps.newHashMap();
-        return results;
+        return values(fieldNames, Maps.<String, Object>newHashMap());
     }
 
     @Override
@@ -186,14 +186,7 @@ public abstract class AbstractProfile implements ProfileSupport {
 
     @Override
     public Map<String, Map<Map<String, Object>, Object>> valuesWithOptions(Iterable<String> fieldNames) {
-        Map<String, Map<Map<String, Object>, Object>> results = Maps.newHashMap();
-        if(fieldNames!=null){
-            for(String fieldName : fieldNames){
-                Map<Map<String, Object>, Object> result = valuesWithOptions(fieldName);
-                if(result!=null) results.put(fieldName,result);
-            }
-        }
-        return results;
+        return valuesWithOptions(fieldNames, Maps.<String, Object>newHashMap());
     }
 
     @Override
@@ -312,5 +305,38 @@ public abstract class AbstractProfile implements ProfileSupport {
     @Override
     public void putValues(ProfileSupport other) {
         putValues(other, false);
+    }
+
+    @Override
+    public abstract Map<Map<String, Object>, Object> valuesWithOptions(String fieldName, Predicate predicate);
+
+    @Override
+    public Set values(String fieldName, Predicate predicate) {
+        Map<Map<String, Object>, Object> results = valuesWithOptions(fieldName,predicate);
+        return results!=null && !results.isEmpty() ? Sets.newHashSet(results.values()) :Sets.newHashSet();
+    }
+
+    @Override
+    public Map<String, Set> values(Iterable<String> fieldNames, Predicate predicate) {
+        Map<String, Set> results = Maps.newHashMap();
+        if(fieldNames!=null){
+            for(String fieldName : fieldNames){
+                Set result = values(fieldName, predicate);
+                if(result!=null) results.put(fieldName,result);
+            }
+        }
+        return results;
+    }
+
+    @Override
+    public Map<String, Map<Map<String, Object>, Object>> valuesWithOptions(Iterable<String> fieldNames, Predicate predicate) {
+        Map<String, Map<Map<String, Object>, Object>> results = Maps.newHashMap();
+        if(fieldNames!=null){
+            for(String fieldName : fieldNames){
+                Map<Map<String, Object>, Object> result = valuesWithOptions(fieldName, predicate);
+                if(result!=null) results.put(fieldName,result);
+            }
+        }
+        return results;
     }
 }

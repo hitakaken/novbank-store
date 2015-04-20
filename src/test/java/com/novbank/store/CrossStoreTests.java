@@ -1,12 +1,8 @@
 package com.novbank.store;
 
-import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
+import com.novbank.store.domain.base.resource.ResourceBacked;
 import com.novbank.store.domain.entity.foaf.Document;
-import com.novbank.store.domain.graph.Account;
-import com.novbank.store.domain.graph.Resource;
 import com.novbank.store.service.AccountService;
-import org.bson.types.ObjectId;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,9 +32,11 @@ public class CrossStoreTests {
 
     @Test
     public void testEntityManager(){
-        Resource doc = new Resource();
-        doc.asProfiled().putValue("QQ","XXXXX");
-        doc.asNode().persist();
+        System.out.println("Start Testing!");
+        Document doc = new Document();
+        doc.setName("qQ");
+        System.out.println(doc.getName());
+
         //System.out.println(profile.keySet());
     }
 

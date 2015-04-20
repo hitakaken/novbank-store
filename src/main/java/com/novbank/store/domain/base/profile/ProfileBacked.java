@@ -16,4 +16,5 @@ public interface ProfileBacked extends ProfileSupport {
     String profileId();
     void initializeProfile();
     void persistProfile();
+    void backupGraph();
 }

@@ -11,19 +11,19 @@ public interface Schema {
     void create();
     void close();
     int countClasses();
-    SchemaClass createClass(final Class<?> iClass);
-    SchemaClass createClass(final String iClassName);
-    SchemaClass createClass(final String iClassName, final SchemaClass iSuperClass);
-    SchemaClass createAbstractClass(final Class<?> iClass);
-    SchemaClass createAbstractClass(final String iClassName);
-    SchemaClass createAbstractClass(final String iClassName, final SchemaClass iSuperClass);
+    MetaClass createClass(final Class<?> iClass);
+    MetaClass createClass(final String iClassName);
+    MetaClass createClass(final String iClassName, final MetaClass iSuperClass);
+    MetaClass createAbstractClass(final Class<?> iClass);
+    MetaClass createAbstractClass(final String iClassName);
+    MetaClass createAbstractClass(final String iClassName, final MetaClass iSuperClass);
     void dropClass(final String iClassName);
     boolean existsClass(final String iClassName);
-    SchemaClass getClass(final Class<?> iClass);
-    SchemaClass getClass(final String iClassName);
-    SchemaClass getOrCreateClass(final String iClassName);
-    SchemaClass getOrCreateClass(final String iClassName, final SchemaClass iSuperClass);
-    Collection<SchemaClass> getClasses();
+    MetaClass getClass(final Class<?> iClass);
+    MetaClass getClass(final String iClassName);
+    MetaClass getOrCreateClass(final String iClassName);
+    MetaClass getOrCreateClass(final String iClassName, final MetaClass iSuperClass);
+    Collection<MetaClass> getClasses();
     List<GlobalProperty> getGlobalProperties();
 
 

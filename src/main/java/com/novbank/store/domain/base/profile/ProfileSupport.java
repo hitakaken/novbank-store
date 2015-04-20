@@ -1,5 +1,7 @@
 package com.novbank.store.domain.base.profile;
 
+import com.google.common.base.Predicate;
+
 import java.util.Map;
 import java.util.Set;
 
@@ -26,6 +28,7 @@ public interface ProfileSupport {
     Map<String,Set> values(Iterable<String> fieldNames);
     Map<String,Set> values(Iterable<String> fieldNames,Map<String,Object> options);
     Map<String,Set> valuesStrictly(Iterable<String> fieldNames,Map<String,Object> options);
+
 
     /**
      * 获取所有字段值（带条件）
@@ -66,6 +69,18 @@ public interface ProfileSupport {
     Object valueStrictly(String fieldName, String k1, Object v1);
     Object valueStrictly(String fieldName, String k1, Object v1, String k2, Object v2);
     Object valueStrictly(String fieldName, String k1, Object v1, String k2, Object v2, String k3, Object v3);
+
+    /**
+     * 使用Guava断言获取字符串值
+     *
+     * @param fieldName
+     * @param predicate
+     * @return
+     */
+    Set values(String fieldName, Predicate predicate);
+    Map<String,Set> values(Iterable<String> fieldNames,Predicate predicate);
+    Map<Map<String,Object>,Object> valuesWithOptions(String fieldName,Predicate predicate);
+    Map<String,Map<Map<String,Object>,Object>> valuesWithOptions(Iterable<String> fieldNames,Predicate predicate);
 
     /**
      * 设置字段值（无额外属性）
@@ -121,4 +136,6 @@ public interface ProfileSupport {
     void putValues(ProfileSupport other, Map<String,Object> options);
     void putValues(ProfileSupport other, boolean overwrite);
     void putValues(ProfileSupport other, Map<String,Object> options, boolean overwrite);
+
+
 }

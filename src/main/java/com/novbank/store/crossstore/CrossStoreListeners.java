@@ -3,10 +3,14 @@ package com.novbank.store.crossstore;
 import com.mongodb.DBObject;
 import com.novbank.store.domain.base.profile.ProfileBacked;
 import com.novbank.store.domain.document.Profile;
+import com.novbank.store.domain.graph.Identifiable;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.data.mongodb.core.mapping.event.AbstractMongoEventListener;
 import org.springframework.data.neo4j.lifecycle.AfterSaveEvent;
+import org.springframework.data.neo4j.lifecycle.BeforeSaveEvent;
 import org.springframework.stereotype.Component;
 
 /**
@@ -14,6 +18,23 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class CrossStoreListeners {
+    @Component
+    public class BeforeNeo4jSaveEventListener implements ApplicationListener<BeforeSaveEvent>{
+        @Autowired
+        public BeforeNeo4jSaveEventListener() {     }
+
+        @Override
+        public void onApplicationEvent(BeforeSaveEvent event) {
+            if(event.getEntity() instanceof Identifiable){
+                Identifiable entity = (Identifiable) event.getEntity();
+                entity.setVersion(entity.getVersion() == null ? 0 : entity.getVersion() + 1);
+                DateTime current = DateTime.now(DateTimeZone.forID("GMT+8"));
+                if(entity.getCreateTime() == null)
+                    entity.setCreateTime(current);
+                entity.setLastModified(current);
+            }
+        }
+    }
 
     @Component
     public class AfterNeo4jSaveEventListener implements ApplicationListener<AfterSaveEvent>{

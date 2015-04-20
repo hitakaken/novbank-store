@@ -15,6 +15,8 @@ import org.springframework.boot.autoconfigure.mongo.MongoProperties;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.context.web.SpringBootServletInitializer;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
@@ -24,6 +26,8 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 import org.springframework.data.neo4j.aspects.config.Neo4jAspectConfiguration;
 import org.springframework.data.neo4j.config.EnableNeo4jRepositories;
 import org.springframework.data.neo4j.lifecycle.AuditingEventListener;
+import org.springframework.data.redis.cache.RedisCacheManager;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 
@@ -37,6 +41,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableMongoRepositories(basePackages = "com.novbank.store.repository.mongo")
 @EnableMongoAuditing
 @EnableConfigurationProperties(DataSourceHelper.Neo4jProperties.class)
+@EnableCaching
 public class DataStoreApplication  extends SpringBootServletInitializer {
     public static Object[] sources = new Object[]{
             DataStoreApplication.class};
@@ -79,6 +84,14 @@ public class DataStoreApplication  extends SpringBootServletInitializer {
     @Bean
     public Mongo mongo(){
         return DataSourceHelper.mongo3(mongoProperties, mongoOptions);
+    }
+
+    @Autowired
+    private RedisTemplate redisTemplate;
+
+    @Bean
+    public CacheManager cacheManager(){
+        return new RedisCacheManager(redisTemplate);
     }
 
     public static void main(String... args) {

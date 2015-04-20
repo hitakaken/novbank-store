@@ -19,12 +19,12 @@ import org.springframework.data.neo4j.support.Neo4jTemplate;
 @Configuration
 public class ProfileEntityAspect {
     @Autowired
-    private transient Neo4jTemplate neo4jOps;
+    private Neo4jTemplate neo4jOps;
 
     @Autowired
-    private transient MongoTemplate mongoOps;
+    private MongoTemplate mongoOps;
 
-    @DeclareMixin("(@ProfiledEntity *)")
+    @DeclareMixin("(@ProfileEntity *)")
     public ProfileBacked createDelegate(Object instance) {
         return new MongoProfileBacking(instance, mongoOps);
     }

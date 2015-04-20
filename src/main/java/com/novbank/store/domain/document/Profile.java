@@ -1,21 +1,36 @@
 package com.novbank.store.domain.document;
 
+import com.google.common.base.Function;
+import com.google.common.base.Predicate;
+import com.google.common.base.Predicates;
 import com.google.common.collect.MapDifference;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import com.mongodb.DBRef;
 import com.novbank.store.domain.base.profile.AbstractProfile;
 import com.novbank.store.util.CollectionUtils;
 import org.springframework.data.annotation.*;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.util.Assert;
 
+import javax.annotation.Nullable;
 import java.util.*;
 
 /**
+ * 档案
+ *
  * Created by CaoKe on 2015/4/18.
  */
 @Document
 public class Profile extends AbstractProfile {
+    public Profile() {
+    }
+
+    public Profile(String id) {
+        this.id = id;
+        this.fields = new HashMap<>();
+    }
+
     @Id
     private String id;
 
@@ -27,25 +42,6 @@ public class Profile extends AbstractProfile {
 
     @Version
     private Long version;
-
-    /**
-     *  实现 Profiled 的 Java 数据结构
-     */
-    private Map<String,Set<Map<String,Object>>> fields;
-
-    private Long graphId;
-
-    private String graphEntityType;
-
-    private Set<String> labels;
-
-    public Profile() {
-    }
-
-    public Profile(String id) {
-        this.id = id;
-        this.fields = new HashMap<>();
-    }
 
     public String getId() {
         return id;
@@ -79,6 +75,14 @@ public class Profile extends AbstractProfile {
         this.version = version;
     }
 
+
+
+    /** Implements Profiled **/
+    /**
+     *  实现 Profiled 的 Java 数据结构
+     */
+    private Map<String,Set<Map<String,Object>>> fields;
+
     public Map<String, Set<Map<String, Object>>> getFields() {
         return fields;
     }
@@ -87,7 +91,6 @@ public class Profile extends AbstractProfile {
         this.fields = fields;
     }
 
-    /** Implements Profiled **/
     public final static String VALUE_FIELD="_value";
     public final static String TIMESTAMP_FIELD="_timestamp";
     protected final static Set<String> IGNORE_COMPARE_FIELDS = Sets.newHashSet(VALUE_FIELD,TIMESTAMP_FIELD);
@@ -110,7 +113,8 @@ public class Profile extends AbstractProfile {
         if(options == null)   options = new HashMap<>();
         CollectionUtils.removeEmptyValueEntry(options);
         options.put(VALUE_FIELD, fieldValue);
-        options.put(TIMESTAMP_FIELD,System.currentTimeMillis());
+        if(!options.containsKey(TIMESTAMP_FIELD))
+            options.put(TIMESTAMP_FIELD,System.currentTimeMillis());
         boolean replaced = false;
         for(Map<String,Object> entry: fields.get(fieldName)){
             MapDifference difference = Maps.difference(options, entry);
@@ -118,7 +122,7 @@ public class Profile extends AbstractProfile {
                     && Sets.difference(difference.entriesDiffering().keySet(), IGNORE_COMPARE_FIELDS).size()==0){
                 if(difference.entriesDiffering().containsKey(VALUE_FIELD)){
                     entry.put(VALUE_FIELD,fieldValue);
-                    entry.put(TIMESTAMP_FIELD,System.currentTimeMillis());
+                    entry.put(TIMESTAMP_FIELD,options.get(TIMESTAMP_FIELD));
                     changed = true;
                 }
                 replaced = true;
@@ -156,6 +160,19 @@ public class Profile extends AbstractProfile {
         return results;
     }
 
+    @Override
+    public Map<Map<String, Object>, Object> valuesWithOptions(String fieldName, Predicate predicate) {
+        Assert.notNull(fieldName);
+        if(predicate == null)   predicate = Predicates.alwaysTrue();
+        final Map<Map<String, Object>, Object> results = Maps.newHashMap();
+        if(!fields.containsKey(fieldName))  return results;
+        for(Map<String,Object> entry: fields.get(fieldName)){
+            if(predicate.apply(entry))
+                results.put(CollectionUtils.copyMapExcludeKeys(entry, EXCLUDE_OPTION_FIELDS), entry.get(VALUE_FIELD));
+        }
+        return results;
+    }
+
     public final static double LOWEST_SIMILARITY = 0.0;
     public final static boolean USE_LATEST = true;
 
@@ -175,4 +192,21 @@ public class Profile extends AbstractProfile {
         }
         return value;
     }
+
+    /**
+     * 记录图模型信息
+     */
+    protected GraphInfo graph;
+
+    public GraphInfo getGraph() {
+        return graph;
+    }
+
+    public void setGraph(GraphInfo graph) {
+        this.graph = graph;
+    }
+
+
+
 }
+

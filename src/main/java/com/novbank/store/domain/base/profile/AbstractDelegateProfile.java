@@ -1,5 +1,7 @@
 package com.novbank.store.domain.base.profile;
 
+import com.google.common.base.Predicate;
+
 import java.util.Map;
 import java.util.Set;
 
@@ -117,6 +119,26 @@ public abstract class AbstractDelegateProfile implements ProfileSupport {
     @Override
     public Object valueStrictly(String fieldName, String k1, Object v1, String k2, Object v2, String k3, Object v3) {
         return delegate().valueStrictly(fieldName, k1, v1, k2, v2, k3, v3);
+    }
+
+    @Override
+    public Set values(String fieldName, Predicate predicate) {
+        return delegate().values(fieldName,predicate);
+    }
+
+    @Override
+    public Map<String, Set> values(Iterable<String> fieldNames, Predicate predicate) {
+        return delegate().values(fieldNames,predicate);
+    }
+
+    @Override
+    public Map<Map<String, Object>, Object> valuesWithOptions(String fieldName, Predicate predicate) {
+        return delegate().valuesWithOptions(fieldName, predicate);
+    }
+
+    @Override
+    public Map<String, Map<Map<String, Object>, Object>> valuesWithOptions(Iterable<String> fieldNames, Predicate predicate) {
+        return delegate().valuesWithOptions(fieldNames, predicate);
     }
 
     @Override
