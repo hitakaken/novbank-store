@@ -5,7 +5,7 @@ package com.novbank.store.service.metadata.schema;
  */
 public enum PropertyType {
     STATIC_PROPERTY,
-    STATIC_RELATIONSHIP,
     DYNAMIC_PROPERTY,
-    DYNAMIC_RELATIONSHIP,
+    DIRECT_RELATION,
+    DYNAMIC_RELATION,
 }
