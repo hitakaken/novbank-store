@@ -7,17 +7,14 @@ import com.novbank.store.domain.base.resource.ResourceEntity;
 import com.novbank.store.service.metadata.schema.GlobalProperty;
 import com.novbank.store.service.metadata.schema.MetaClass;
 import com.novbank.store.service.metadata.schema.Schema;
-import com.novbank.store.service.metadata.repository.SchemaRepository;
 import com.novbank.store.service.metadata.support.entity.ResourceGlobalProperty;
 import com.novbank.store.service.metadata.support.entity.ResourceMetaClass;
-import com.novbank.store.service.metadata.support.repository.DefaultXmlRepository;
+import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.AnnotatedTypeScanner;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ClassUtils;
-import org.springframework.util.ReflectionUtils;
 
 import java.io.File;
 import java.lang.reflect.Modifier;
@@ -187,7 +184,7 @@ public class SchemaManager implements Schema{
         for(Class<?> clazz : getUserClass(classes)){
             traversal(clazz,cache);
         }
-        System.out.println(cache);
+
         return null;
     }
 
@@ -228,6 +225,7 @@ public class SchemaManager implements Schema{
         cache.put(key,metaClass);
         return metaClass;
     }
+
 
 
 }

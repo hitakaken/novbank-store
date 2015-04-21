@@ -11,6 +11,7 @@ import org.apache.commons.lang.StringUtils;
 import org.codehaus.groovy.ast.ClassNode;
 
 import javax.persistence.Entity;
+import javax.persistence.Transient;
 import javax.xml.bind.annotation.*;
 import java.util.Collection;
 import java.util.List;
@@ -38,20 +39,27 @@ public class ResourceMetaClass implements MetaClass {
 
     @XmlTransient
     @JsonIgnore
-    private MetaClass superClass;
+    @Transient
+    private transient MetaClass superClass;
 
     @XmlElement(name = "javaType", required = false, nillable =false)
     private String javaClassName;
 
     @XmlTransient
     @JsonIgnore
-    private Class javaClass;
+    @Transient
+    private transient Class javaClass;
 
     @XmlElement(name = "properties")
     private List<ResourceMetaProperty> declaredProperties;
 
     @XmlAttribute(required = false)
     private String cacheName;
+
+    @XmlTransient
+    @JsonIgnore
+    @Transient
+    private transient boolean initialized = false;
 
     @Override
     public String getName() {
@@ -167,4 +175,11 @@ public class ResourceMetaClass implements MetaClass {
         return cacheName;
     }
 
+    public boolean isInitialized() {
+        return initialized;
+    }
+
+    public void setInitialized(boolean initialized) {
+        this.initialized = initialized;
+    }
 }
