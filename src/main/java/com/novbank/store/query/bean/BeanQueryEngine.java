@@ -13,23 +13,23 @@ import java.util.Set;
  * Created by CaoKe on 2015/4/21.
  */
 public class BeanQueryEngine {
-    public final static Function<Iterator<?>, List<?>> NoChangeToListSelector =
-            new Function<Iterator<?>,List<?>>() {
+    public final static Function<Iterable<?>, List<?>> NoChangeToListSelector =
+            new Function<Iterable<?>,List<?>>() {
                 @Nullable  @Override
-                public List<?> apply(Iterator<?> input) {
+                public List<?> apply(Iterable<?> input) {
                     return Lists.newArrayList(input);
                 }
             };
 
-    public final static Function<Iterator<?>, Set<?>> NoChangeToSetSelector =
-            new Function<Iterator<?>,Set<?>>() {
+    public final static Function<Iterable<?>, Set<?>> NoChangeToSetSelector =
+            new Function<Iterable<?>,Set<?>>() {
                 @Nullable  @Override
-                public Set<?> apply(Iterator<?> input) {
-                    return Sets.newHashSet(input);
+                public Set<?> apply(Iterable<?> input) {
+                    return Sets.newLinkedHashSet(input);
                 }
             };
 
-    public static BeanQuery select(){
+    public static BeanQuery<?,?> select(){
         return new BeanQuery(NoChangeToListSelector);
     }
 
