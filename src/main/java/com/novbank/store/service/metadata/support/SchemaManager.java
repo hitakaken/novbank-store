@@ -161,12 +161,14 @@ public class SchemaManager implements Schema{
 
     private final AnnotatedTypeScanner scanner = new AnnotatedTypeScanner(ResourceEntity.class);
 
+    //扫描包
     public void scanPackage(){
         if(settings.getAutoScanPackages()==null)
             return;
         parse(scanner.findTypes(settings.getAutoScanPackages()));
     }
 
+    //获取Cglib父类，该步可能引入Bug
     public Set<Class<?>> getUserClass(Set<Class<?>> classes){
         Set<Class<?>> results = Sets.newHashSet();
         for(Class<?> clazz : classes)
@@ -174,19 +176,22 @@ public class SchemaManager implements Schema{
         return results;
     }
 
-    public void parse(Class<?>... classes){
+    //解析类信息
+    public Set<ResourceMetaClass> parse(Class<?>... classes){
         if(classes!=null)
-            parse(Sets.newHashSet(classes));
+            return parse(Sets.newHashSet(classes));
+        return null;
     }
-
-    public void parse(Set<Class<?>> classes){
-        Map<String,ResourceMetaClass> cache = Maps.newHashMap();
+    public Set<ResourceMetaClass> parse(Set<Class<?>> classes){
+        Map<String, ResourceMetaClass> cache = Maps.newHashMap();
         for(Class<?> clazz : getUserClass(classes)){
             traversal(clazz,cache);
         }
         System.out.println(cache);
+        return null;
     }
 
+    //遍历类信息
     public ResourceMetaClass traversal(Class<?> clazz,Map<String,ResourceMetaClass> cache){
         ResourceMetaClass superClass = null;
         if(clazz.getSuperclass()!=null && clazz.getSuperclass().getAnnotation(ResourceEntity.class)!=null){
@@ -206,6 +211,7 @@ public class SchemaManager implements Schema{
         String key = namespace + ":" +name;
         if(cache.containsKey(key)) return cache.get(key);
         if(nativeClasses.containsKey(key)) return nativeClasses.get(key);
+        //TODO 实现overwrite机制
         ResourceMetaClass metaClass = new ResourceMetaClass();
         metaClass.setName(name);
         metaClass.setNamespace(namespace);
@@ -222,4 +228,6 @@ public class SchemaManager implements Schema{
         cache.put(key,metaClass);
         return metaClass;
     }
+
+
 }
