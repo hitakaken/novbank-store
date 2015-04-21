@@ -1,15 +1,14 @@
 package com.novbank.store.service.metadata.schema;
 
+import com.novbank.store.service.metadata.Persistable;
+
 import java.util.Collection;
 import java.util.List;
 
 /**
- * Created by HP on 2015/4/16.
+ * Created by Cao Ke on 2015/4/16.
  */
-public interface Schema {
-    void reload();
-    void create();
-    void close();
+public interface Schema  extends Persistable {
     int countClasses();
     MetaClass createClass(final Class<?> iClass);
     MetaClass createClass(final String iClassName);

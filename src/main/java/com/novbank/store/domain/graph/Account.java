@@ -6,7 +6,7 @@ import org.springframework.data.neo4j.annotation.NodeEntity;
 
 
 /**
- * Created by HP on 2015/4/15.
+ * Created by Cao Ke on 2015/4/15.
  */
 @NodeEntity
 @ProfileEntity

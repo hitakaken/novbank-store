@@ -7,7 +7,7 @@ import org.springframework.data.neo4j.annotation.RelatedTo;
 import java.util.Set;
 
 /**
- * Created by HP on 2015/4/20.
+ * Created by Cao Ke on 2015/4/20.
  */
 @ResourceEntity
 public class Group extends Agent{

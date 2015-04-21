@@ -3,6 +3,7 @@ package com.novbank.store;
 import com.mongodb.Mongo;
 import com.mongodb.MongoClientOptions;
 import com.novbank.store.helper.DataSourceHelper;
+import com.novbank.store.service.metadata.support.MetadataProperties;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.beans.BeansException;
@@ -15,6 +16,7 @@ import org.springframework.boot.autoconfigure.mongo.MongoProperties;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.context.web.SpringBootServletInitializer;
+import org.springframework.boot.orm.jpa.EntityScan;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
@@ -32,15 +34,16 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 
 /**
- * Created by HP on 2015/4/14.
+ * Created by Cao Ke on 2015/4/14.
  */
 @SpringBootApplication
 @EnableBatchProcessing
 @EnableAspectJAutoProxy
 @EnableMongoRepositories(basePackages = "com.novbank.store.repository.mongo")
 @EnableMongoAuditing
-@EnableConfigurationProperties(DataSourceHelper.Neo4jProperties.class)
+@EnableConfigurationProperties({DataSourceHelper.Neo4jProperties.class,MetadataProperties.class})
 @EnableCaching
+@EntityScan("com.novbank.store.domain")
 public class DataStoreApplication  extends SpringBootServletInitializer {
     public static Object[] sources = new Object[]{
             DataStoreApplication.class};
@@ -92,6 +95,9 @@ public class DataStoreApplication  extends SpringBootServletInitializer {
     public CacheManager cacheManager(){
         return new RedisCacheManager(redisTemplate);
     }
+
+    @Autowired
+    private MetadataProperties metadataProperties;
 
     public static void main(String... args) {
         SpringApplication.run(sources, args);

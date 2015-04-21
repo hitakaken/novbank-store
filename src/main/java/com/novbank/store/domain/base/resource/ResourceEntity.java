@@ -15,5 +15,5 @@ public @interface ResourceEntity {
     String name() default "";
     String namespace() default "";
     boolean cacheable() default true;
-    String[] cacheNames() default {};
+    String cacheName() default "";
 }

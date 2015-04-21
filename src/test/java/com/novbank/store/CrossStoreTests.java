@@ -2,6 +2,7 @@ package com.novbank.store;
 
 import com.novbank.store.domain.entity.foaf.Document;
 import com.novbank.store.domain.graph.Account;
+import com.novbank.store.domain.graph.Resource;
 import com.novbank.store.service.account.AccountService;
 import org.bson.types.ObjectId;
 import org.junit.Test;
@@ -14,7 +15,7 @@ import org.springframework.data.neo4j.support.Neo4jTemplate;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 /**
- * Created by HP on 2015/4/15.
+ * Created by Cao Ke on 2015/4/15.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = DataStoreApplication.class)
@@ -33,13 +34,9 @@ public class CrossStoreTests {
 
     @Test
     public void testEntityManager(){
-        Account account = new Account();
-        account.setName(ObjectId.get().toString());
-        account.setPassword("ask");
-        account.asProfiled().putValue("QQ", "999");
-        account.asProfiled().save();
-        account.asProfiled().backupGraph();
-        account.asProfiled().save();
+        Resource doc = new Resource();
+        doc.setUrl("foaf:Document:kcao_first_blog");
+        doc.asProfiled().save();
         //accounts.save(account);
         //System.out.println(profile.keySet());
     }

@@ -9,4 +9,23 @@ import org.springframework.stereotype.Service;
 @Service
 public class SecurityManager implements Security {
 
+    @Override
+    public void create() {
+
+    }
+
+    @Override
+    public void reload() {
+
+    }
+
+    @Override
+    public void persist() {
+
+    }
+
+    @Override
+    public void close() {
+
+    }
 }

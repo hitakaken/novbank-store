@@ -7,13 +7,9 @@ import com.novbank.store.service.metadata.security.Security;
 import java.io.IOException;
 
 /**
- * Created by HP on 2015/4/16.
+ * Created by Cao Ke on 2015/4/16.
  */
-public interface Metadata {
-    void load();
-    void create();
-    void reload();
-    void close();
+public interface Metadata extends Persistable{
     Schema getSchema();
     Security getSecurity();
     FunctionLibrary getFunctionLibrary();

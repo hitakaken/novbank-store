@@ -5,7 +5,7 @@ import org.springframework.data.mongodb.gridfs.GridFsOperations;
 import org.springframework.stereotype.Component;
 
 /**
- * Created by HP on 2015/4/17.
+ * Created by Cao Ke on 2015/4/17.
  */
 @Component
 public class GridFsClient {

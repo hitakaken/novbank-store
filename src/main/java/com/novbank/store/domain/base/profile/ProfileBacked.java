@@ -2,7 +2,7 @@ package com.novbank.store.domain.base.profile;
 
 
 /**
- * Created by HP on 2015/4/17.
+ * Created by Cao Ke on 2015/4/17.
  */
 public interface ProfileBacked extends ProfileSupport {
     String PROFILE_COLLECTION_NAME = "profile";

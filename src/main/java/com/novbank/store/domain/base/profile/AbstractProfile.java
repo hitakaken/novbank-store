@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Created by HP on 2015/4/18.
+ * Created by Cao Ke on 2015/4/18.
  */
 public abstract class AbstractProfile implements ProfileSupport {
     @Override

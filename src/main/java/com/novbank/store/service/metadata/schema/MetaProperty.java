@@ -2,8 +2,11 @@ package com.novbank.store.service.metadata.schema;
 
 import org.springframework.validation.Validator;
 
+import java.util.Map;
+import java.util.Set;
+
 /**
- * Created by HP on 2015/4/16.
+ * Created by Cao Ke on 2015/4/16.
  */
 public interface MetaProperty {
     String getName();
@@ -25,6 +28,7 @@ public interface MetaProperty {
     boolean isMandatory();
     //缓存
     boolean isCacheable();
-    String cacheName();
-    String cacheKey();
+    Map<String,Map<String,String>> caches();
+    Map<String,Map<String,String>> cachePuts();
+    Map<String,Set<String>> cacheEvict();
 }

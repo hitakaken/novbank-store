@@ -14,7 +14,7 @@ import javax.persistence.Transient;
 import java.io.Serializable;
 
 /**
- * Created by HP on 2015/4/15.
+ * Created by Cao Ke on 2015/4/15.
  */
 public abstract class Identifiable implements Serializable{
     @GraphId

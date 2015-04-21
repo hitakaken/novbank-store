@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Created by HP on 2015/4/20.
+ * Created by Cao Ke on 2015/4/20.
  */
 public class GraphInfo {
     protected Long graphId;
