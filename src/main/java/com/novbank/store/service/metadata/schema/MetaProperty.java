@@ -10,24 +10,23 @@ import java.util.Set;
  */
 public interface MetaProperty {
     String getName();
-    String getFullName();
-    String getNameSpace();
+    String getNamespace();
+    String getAlias();
     PropertyType getType();
-    MetaClass getLinkedClass();
-    PropertyType getLinkedType();
-    boolean isJustProfile();
-    boolean isReadonly();
-    //校验
-    boolean isNotNull();
-    String validatorString();
-    Validator validator();
+    String getLinkedType();
+    String getReturnType();
+    boolean isReadOnly();
+    boolean isProfileOnly();
+    boolean isNullable();
+    boolean isCached();
     //动态计算
-    boolean isDynamic();
-    String dynamicScript();
-    String dynamicScriptType();
+    boolean isQuery();
+    String getQueryStrategy();
     boolean isMandatory();
-    //缓存
-    boolean isCacheable();
+    //校验策略
+    String getValidatorStrategy();
+    Validator getValidator();
+    //缓存策略
     Map<String,Map<String,String>> caches();
     Map<String,Map<String,String>> cachePuts();
     Map<String,Set<String>> cacheEvict();

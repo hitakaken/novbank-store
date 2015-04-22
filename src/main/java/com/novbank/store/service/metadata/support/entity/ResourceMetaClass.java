@@ -37,17 +37,13 @@ public class ResourceMetaClass implements MetaClass {
     @XmlAttribute(required = false)
     private String superClassName;
 
-    @XmlTransient
-    @JsonIgnore
-    @Transient
-    private transient MetaClass superClass;
+    @XmlTransient @JsonIgnore @Transient
+    private transient ResourceMetaClass superClass;
 
     @XmlElement(name = "javaType", required = false, nillable =false)
     private String javaClassName;
 
-    @XmlTransient
-    @JsonIgnore
-    @Transient
+    @XmlTransient @JsonIgnore @Transient
     private transient Class javaClass;
 
     @XmlElement(name = "properties")
@@ -56,9 +52,7 @@ public class ResourceMetaClass implements MetaClass {
     @XmlAttribute(required = false)
     private String cacheName;
 
-    @XmlTransient
-    @JsonIgnore
-    @Transient
+    @XmlTransient @JsonIgnore @Transient
     private transient boolean initialized = false;
 
     public ResourceMetaClass() {
@@ -100,11 +94,11 @@ public class ResourceMetaClass implements MetaClass {
     }
 
     @Override
-    public MetaClass getSuperClass() {
+    public ResourceMetaClass getSuperClass() {
         return superClass;
     }
 
-    public void setSuperClass(MetaClass superClass) {
+    public void setSuperClass(ResourceMetaClass superClass) {
         this.superClass = superClass;
     }
 

@@ -1,27 +1,36 @@
 package com.novbank.store.service.metadata.support;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import com.google.common.reflect.Reflection;
+import com.google.common.reflect.TypeResolver;
+import com.google.common.reflect.TypeToken;
 import com.mysema.query.types.Path;
-import com.novbank.store.domain.base.resource.Namespace;
-import com.novbank.store.domain.base.resource.ResourceEntity;
+import com.novbank.store.domain.base.resource.*;
 import com.novbank.store.service.metadata.schema.GlobalProperty;
 import com.novbank.store.service.metadata.schema.MetaClass;
+import com.novbank.store.service.metadata.schema.PropertyType;
 import com.novbank.store.service.metadata.schema.Schema;
 import com.novbank.store.service.metadata.support.entity.ResourceGlobalProperty;
 import com.novbank.store.service.metadata.support.entity.ResourceMetaClass;
+import com.novbank.store.service.metadata.support.entity.ResourceMetaProperty;
 import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.AnnotatedTypeScanner;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ClassUtils;
+import org.springframework.util.ReflectionUtils;
 
 import static com.mysema.query.collections.CollQueryFactory.*;
 import static com.mysema.query.alias.Alias.*;
 import static com.mysema.query.support.Expressions.*;
 
 import java.io.File;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.*;
 
@@ -29,7 +38,7 @@ import java.util.*;
  * Created by CaoKe on 2015/4/20.
  */
 @Service
-public class SchemaManager implements Schema{
+public class SchemaManager implements Schema<ResourceMetaClass>{
     public final static int CURRENT_VERSION  = 1;
 
     @Autowired
@@ -92,32 +101,32 @@ public class SchemaManager implements Schema{
     }
 
     @Override
-    public MetaClass createClass(Class<?> iClass) {
+    public ResourceMetaClass createClass(Class<?> iClass) {
         return null;
     }
 
     @Override
-    public MetaClass createClass(String iClassName) {
+    public ResourceMetaClass createClass(String iClassName) {
         return null;
     }
 
     @Override
-    public MetaClass createClass(String iClassName, MetaClass iSuperClass) {
+    public ResourceMetaClass createClass(String iClassName, ResourceMetaClass iSuperClass) {
         return null;
     }
 
     @Override
-    public MetaClass createAbstractClass(Class<?> iClass) {
+    public ResourceMetaClass createAbstractClass(Class<?> iClass) {
         return null;
     }
 
     @Override
-    public MetaClass createAbstractClass(String iClassName) {
+    public ResourceMetaClass createAbstractClass(String iClassName) {
         return null;
     }
 
     @Override
-    public MetaClass createAbstractClass(String iClassName, MetaClass iSuperClass) {
+    public ResourceMetaClass createAbstractClass(String iClassName, ResourceMetaClass iSuperClass) {
         return null;
     }
 
@@ -128,32 +137,32 @@ public class SchemaManager implements Schema{
 
     @Override
     public boolean existsClass(String iClassName) {
-        return false;
+        return nativeClasses.containsKey(iClassName);
     }
 
     @Override
-    public MetaClass getClass(Class<?> iClass) {
+    public ResourceMetaClass getClass(Class<?> iClass) {
         return null;
     }
 
     @Override
-    public MetaClass getClass(String iClassName) {
+    public ResourceMetaClass getClass(String iClassName) {
+        return nativeClasses.get(iClassName);
+    }
+
+    @Override
+    public ResourceMetaClass getOrCreateClass(String iClassName) {
+        return nativeClasses.get(iClassName);
+    }
+
+    @Override
+    public ResourceMetaClass getOrCreateClass(String iClassName, ResourceMetaClass iSuperClass) {
         return null;
     }
 
     @Override
-    public MetaClass getOrCreateClass(String iClassName) {
-        return null;
-    }
-
-    @Override
-    public MetaClass getOrCreateClass(String iClassName, MetaClass iSuperClass) {
-        return null;
-    }
-
-    @Override
-    public Collection<MetaClass> getClasses() {
-        return null;
+    public Collection<ResourceMetaClass> getClasses() {
+        return nativeClasses.values();
     }
 
     @Override
@@ -189,8 +198,126 @@ public class SchemaManager implements Schema{
         for(Class<?> clazz : getUserClass(classes)){
             traversal(clazz,cache);
         }
-        return null;
+        for(String key:cache.keySet()){
+            initialize(cache.get(key));
+        }
+        nativeClasses.putAll(cache);
+        return Sets.newHashSet(cache.values());
     }
+
+    private void initialize(ResourceMetaClass resourceMetaClass) {
+        if(resourceMetaClass.isInitialized())
+            return;
+        if(resourceMetaClass.getSuperClass()!=null && !resourceMetaClass.getSuperClass().isInitialized())
+            initialize(resourceMetaClass.getSuperClass());
+        TypeToken type = TypeToken.of(resourceMetaClass.getJavaClass());
+        Set<String> transients = Sets.newHashSet();
+        Map<String,Field> fields = Maps.newHashMap();
+        Map<String,Method> getters = Maps.newHashMap();
+        Map<String,Method> setters = Maps.newHashMap();
+        Map<String,ResourceProperty> annotations = Maps.newHashMap();
+        Map<String,ResourceRelation> relations = Maps.newHashMap();
+        Map<String,ResourceQuery> querys = Maps.newHashMap();
+        Map<String,ResourceValidator> validators = Maps.newHashMap();
+        for(Field field : resourceMetaClass.getJavaClass().getDeclaredFields()){
+            if(Modifier.isTransient(field.getModifiers()) ||
+                    field.isAnnotationPresent(javax.persistence.Transient.class)||
+                    field.isAnnotationPresent(org.springframework.data.annotation.Transient.class))
+            {transients.add(field.getName());continue;}
+            fields.put(field.getName(),field);
+            if(field.getAnnotation(ResourceProperty.class)!=null)
+                annotations.put(field.getName(),field.getAnnotation(ResourceProperty.class));
+            if(field.getAnnotation(ResourceRelation.class)!=null)
+                relations.put(field.getName(),field.getAnnotation(ResourceRelation.class));
+            if(field.getAnnotation(ResourceQuery.class)!=null)
+                querys.put(field.getName(),field.getAnnotation(ResourceQuery.class));
+            if(field.getAnnotation(ResourceValidator.class)!=null)
+                validators.put(field.getName(),field.getAnnotation(ResourceValidator.class));
+        }
+        for(Method method : resourceMetaClass.getJavaClass().getDeclaredMethods()){
+            String name = null; boolean isGetter = true;
+            if(method.getName().startsWith("is") && method.getName().length()>2 && boolean.class.isAssignableFrom(method.getReturnType()) && method.getParameterTypes().length == 0)
+                name = StringUtils.uncapitalize(method.getName().substring(2));
+            else if(method.getName().startsWith("get") && method.getName().length()>3  && method.getParameterTypes().length == 0)
+                name = StringUtils.uncapitalize(method.getName().substring(3));
+            else if(method.getName().startsWith("set") && method.getName().length()>3  && method.getParameterTypes().length == 1)
+            {   name = StringUtils.uncapitalize(method.getName().substring(3)); isGetter = false;   }
+            if(name == null || transients.contains(name)) continue;
+            if(Modifier.isTransient(method.getModifiers()) ||
+                    method.isAnnotationPresent(javax.persistence.Transient.class)||
+                    method.isAnnotationPresent(org.springframework.data.annotation.Transient.class)){
+                transients.add(name);
+                fields.remove(name);getters.remove(name);setters.remove(name);
+                continue;
+            }
+            if(isGetter) getters.put(name,method); else setters.put(name,method);
+            if(method.getAnnotation(ResourceProperty.class)!=null && !annotations.containsKey(name))
+                annotations.put(name,method.getAnnotation(ResourceProperty.class));
+            if(method.getAnnotation(ResourceRelation.class)!=null && !relations.containsKey(name))
+                relations.put(name,method.getAnnotation(ResourceRelation.class));
+            if(method.getAnnotation(ResourceQuery.class)!=null && !querys.containsKey(name))
+                querys.put(name,method.getAnnotation(ResourceQuery.class));
+            if(method.getAnnotation(ResourceValidator.class)!=null && !validators.containsKey(name))
+                validators.put(name,method.getAnnotation(ResourceValidator.class));
+        }
+        //遍历 field/getter 并集，忽略无读取方法的setter
+        List<ResourceMetaProperty> properties = Lists.newArrayList();
+        for(String name : Sets.union(fields.keySet(),getters.keySet())){
+            ResourceMetaProperty property = new ResourceMetaProperty();
+            property.setName(name);
+            if(fields.containsKey(name)) property.setField(fields.get(name));
+            if(getters.containsKey(name)) property.setGetter(getters.get(name));
+            if(setters.containsKey(name))
+                property.setSetter(setters.get(name));
+            else
+                property.setReadOnly(true);
+            property.setAlias(name);
+            property.setNamespace(resourceMetaClass.getNamespace());
+            property.setReadOnly(false);
+            property.setProfileOnly(true);
+            property.setNullable(true); //ReturnType ?
+            property.setCached(false);
+            if(querys.containsKey(name)){
+                ResourceQuery annotation = querys.get(name);
+                property.setAlias(StringUtils.isNotBlank(annotation.name()) ? annotation.name() : name);
+                property.setNamespace(StringUtils.isNotBlank(annotation.namespace()) ? annotation.namespace() : resourceMetaClass.getNamespace());
+                property.setReadOnly(true);
+                property.setProfileOnly(annotation.profileOnly());
+                property.setNullable(true);
+                property.setCached(annotation.cached());
+                property.setQueryStrategy(annotation.value());
+                property.setType(PropertyType.DYNAMIC);
+                property.setLinkedType(annotation.target());
+            }else if(annotations.containsKey(name)){
+                ResourceProperty annotation = annotations.get(name);
+                property.setAlias(StringUtils.isNotBlank(annotation.value()) ? annotation.value() : name);
+                property.setNamespace(StringUtils.isNotBlank(annotation.namespace()) ? annotation.namespace() : resourceMetaClass.getNamespace());
+                property.setReadOnly(annotation.readOnly());
+                property.setProfileOnly(annotation.profileOnly());
+                property.setNullable(annotation.nullable());
+                property.setCached(annotation.cached());
+                property.setType(PropertyType.PROPERTY);
+            }else if(relations.containsKey(name)){
+                ResourceRelation annotation = relations.get(name);
+                property.setAlias(StringUtils.isNotBlank(annotation.value())?annotation.value():name);
+                property.setNamespace(StringUtils.isNotBlank(annotation.namespace())?annotation.namespace():resourceMetaClass.getNamespace());
+                property.setReadOnly(annotation.readOnly());
+                property.setProfileOnly(false);
+                property.setNullable(annotation.nullable());
+                property.setCached(annotation.cached());
+                property.setType(PropertyType.RELATION);
+                property.setLinkedType(annotation.target());
+            }
+            if(validators.containsKey(name))
+                property.setValidatorStrategy(validators.get(name).value());
+            TypeToken returnType = TypeToken.of(fields.containsKey(name)?fields.get(name).getType():getters.get(name).getReturnType());
+            property.setReturnType(returnType.toString());
+            property.setRawReturnType(returnType);
+            properties.add(property);
+        }
+        resourceMetaClass.setDeclaredProperties(properties);
+    }
+
 
     //遍历类信息
     public ResourceMetaClass traversal(Class<?> clazz,Map<String,ResourceMetaClass> cache){
@@ -209,7 +336,7 @@ public class SchemaManager implements Schema{
             namespace = clazz.getPackage().getAnnotation(Namespace.class).value();
         else
             namespace = ClassUtils.getShortName(clazz.getPackage().getName());
-        String key = namespace + ":" +name;
+        String key = clazz.getCanonicalName();
         if(cache.containsKey(key)) return cache.get(key);
         if(nativeClasses.containsKey(key)) return nativeClasses.get(key);
         //TODO 实现overwrite机制

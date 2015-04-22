@@ -304,11 +304,11 @@
             <artifactId>neo4j-graphviz</artifactId>
             <version>${neo4j.version}</version>
         </dependency>
-        <!--<dependency>
+        <dependency>
             <groupId>org.neo4j</groupId>
             <artifactId>neo4j-cypher-dsl</artifactId>
             <version>${neo4j.cypher-dsl.version}</version>
-        </dependency>-->
+        </dependency>
         <!-- After 2.2.0 -->
         <!--<dependency>
             <groupId>org.neo4j</groupId>
@@ -394,14 +394,8 @@
         </dependency>
         <dependency>
             <groupId>com.mysema.querydsl</groupId>
-            <artifactId>querydsl-lucene3</artifactId>
+            <artifactId>querydsl-lucene4</artifactId>
             <version>${querydsl.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.apache.lucene</groupId>
-                    <artifactId>lucene-core</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.mysema.querydsl</groupId>
