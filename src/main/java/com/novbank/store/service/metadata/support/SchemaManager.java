@@ -2,6 +2,7 @@ package com.novbank.store.service.metadata.support;
 
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import com.mysema.query.types.Path;
 import com.novbank.store.domain.base.resource.Namespace;
 import com.novbank.store.domain.base.resource.ResourceEntity;
 import com.novbank.store.service.metadata.schema.GlobalProperty;
@@ -15,6 +16,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.AnnotatedTypeScanner;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ClassUtils;
+
+import static com.mysema.query.collections.CollQueryFactory.*;
+import static com.mysema.query.alias.Alias.*;
+import static com.mysema.query.support.Expressions.*;
 
 import java.io.File;
 import java.lang.reflect.Modifier;
@@ -184,7 +189,6 @@ public class SchemaManager implements Schema{
         for(Class<?> clazz : getUserClass(classes)){
             traversal(clazz,cache);
         }
-
         return null;
     }
 

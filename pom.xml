@@ -63,7 +63,6 @@
         <hibernate-jpa20.version>1.0.1.Final</hibernate-jpa20.version>
         <hibernate-jpa21.version>1.0.0.Final</hibernate-jpa21.version>
         <HikariCP.version>2.3.5</HikariCP.version>
-        <querydsl.version>3.6.3</querydsl.version>
         <!-- JDBC -->
         <derby.version>10.11.1.1</derby.version>
         <hsqldb.version>2.3.2</hsqldb.version>
@@ -120,7 +119,7 @@
     </properties>
 
     <repositories>
-       <!-- <repository>
+        <repository>
             <id>central</id>
             <name>Central</name>
             <url>https://repo1.maven.org/maven2</url>
@@ -129,7 +128,7 @@
             <id>spring-milestone</id>
             <name>Spring Milestone</name>
             <url>https://repo.spring.io/libs-milestone</url>
-        </repository>-->
+        </repository>
     </repositories>
 
     <dependencies>
@@ -412,6 +411,11 @@
         <dependency>
             <groupId>com.mysema.querydsl</groupId>
             <artifactId>querydsl-apt</artifactId>
+            <version>${querydsl.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.mysema.querydsl</groupId>
+            <artifactId>querydsl-collections</artifactId>
             <version>${querydsl.version}</version>
         </dependency>
 

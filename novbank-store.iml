@@ -180,6 +180,7 @@
     <orderEntry type="library" name="Maven: com.mysema.querydsl:querydsl-codegen:3.6.3" level="project" />
     <orderEntry type="library" name="Maven: com.mysema.codegen:codegen:0.6.6" level="project" />
     <orderEntry type="library" name="Maven: org.eclipse.jdt.core.compiler:ecj:4.3.1" level="project" />
+    <orderEntry type="library" name="Maven: com.mysema.querydsl:querydsl-collections:3.6.3" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.data:spring-data-rest-webmvc:2.3.0.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.data:spring-data-rest-core:2.3.0.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.hateoas:spring-hateoas:0.17.0.RELEASE" level="project" />

@@ -61,6 +61,9 @@ public class ResourceMetaClass implements MetaClass {
     @Transient
     private transient boolean initialized = false;
 
+    public ResourceMetaClass() {
+    }
+
     @Override
     public String getName() {
         return name;
