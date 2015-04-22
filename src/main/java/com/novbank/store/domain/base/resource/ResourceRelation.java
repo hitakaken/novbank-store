@@ -13,6 +13,8 @@ import java.lang.annotation.*;
 @Persistent
 public @interface ResourceRelation {
     String value() default "";
+    String type();
+    String direction();
     String namespace() default "";
     boolean readOnly() default false;
     boolean nullable() default true;

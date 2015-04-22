@@ -1,10 +1,10 @@
 package com.novbank.store.domain.base.resource;
 
+import org.neo4j.graphdb.Node;
+
 /**
  * Created by Cao Ke on 2015/4/20.
  */
-public interface ResourceSupport {
-    Object getProperty(String propertyName);
-    void setProperty(String property, Object newValue);
+public interface ResourceSupport extends Node {
 
 }
